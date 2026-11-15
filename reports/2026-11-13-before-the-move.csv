@@ -1,0 +1,11 @@
+ticker,direction,move_5d,close,watchlist,what_happened,headlines
+MSFT,bad,-0.013,523.88,True,Serious company news,"Consumer Tech (Nov 9-13): Jensen Resigns From Nvidia Amid Affair Controvery, Microsoft Faces Massive Outage & More | Why the Microsoft Outage Came at the Worst Possible Time for the Stock"
+UNH,bad,0.034,407.46,True,SEC red-flag filing,2026-11-09: Executive / director departure (8-K 5.02)
+TSLA,bad,0.089,390.22,True,Serious company news,"Elon Musk's Tesla and SpaceX Lost More Than $420 Billion in Combined Market Value in Two Days After Democrats Swept the Midterms, With Investors Fearing New Congressional Probes. Here's Why That Political Risk Matters for Shareholders"
+NVO,bad,0.033,41.63,True,Serious company news,"Novo's investigational CagriSema, a GLP-1 and amylin analog, demonstrated ~21% average weight loss with lower doses in the REDEFINE 9 trial, presented at ObesityWeek® 2026 and published in The Lancet Diabetes & Endocrinology | Novo submits etavopivat, an investigational once-daily therapy for adolescents and adults living with sickle cell disease, to the FDA and EMA for approval"
+LLY,bad,0.066,1443.5,True,Negative news on your watchlist,"Jefferies Raised Its Eli Lilly (LLY) Target to $1,700. Here’s What the Firm Is Counting On"
+BAC,bad,0.032,51.02,False,Serious company news,Bank Of America (BAC) Agrees To Settle Unauthorized Account Openings Class Action | BofA to settle fake-accounts lawsuit
+AMD,bad,0.189,534.06,False,Serious company news,AMD Just Crushed Nvidia by 32 Points After Scandal. Here’s How NVDA Can Come Back
+JPM,bad,0.035,346.19,False,Serious company news,JPMorgan Stock Slid After Reports That Senate Democrats Plan a New Investigation Into Jamie Dimon's Bank Over Its Jeffrey Epstein Relationship. Here's Why That Political Risk Could Weigh on JPM Shares.
+COST,bad,0.05,1106.21,False,SEC red-flag filing,2026-11-10: Executive / director departure (8-K 5.02)
+GS,bad,0.059,916.56,False,Serious company news,"Private Credit Investors Are Getting Nervous About Defaults, Goldman Sachs Survey Finds"
