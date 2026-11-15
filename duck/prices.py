@@ -1,11 +1,14 @@
 """Local price history (SQLite), filled one market-wide call per trading day."""
 import datetime as dt
 import sqlite3
+import threading
+
+_LOCK = threading.Lock()
 
 
 class PriceStore:
     def __init__(self, path="data/prices.db"):
-        self.db = sqlite3.connect(path)
+        self.db = sqlite3.connect(path, check_same_thread=False)  # read from several scans at once
         self.db.execute("CREATE TABLE IF NOT EXISTS bars (date TEXT, ticker TEXT, close REAL, high REAL,"
                         " volume REAL, PRIMARY KEY(date, ticker))")
         self.db.execute("CREATE TABLE IF NOT EXISTS days (date TEXT PRIMARY KEY, n INTEGER)")
@@ -51,6 +54,21 @@ class PriceStore:
         return out, last
 
     def close_on_or_before(self, ticker, date):
-        r = self.db.execute("SELECT close FROM bars WHERE ticker=? AND date<=? ORDER BY date DESC LIMIT 1",
-                            (ticker, date)).fetchone()
+        with _LOCK:
+            r = self.db.execute("SELECT close FROM bars WHERE ticker=? AND date<=? ORDER BY date DESC LIMIT 1",
+                                (ticker, date)).fetchone()
         return r[0] if r else None
+
+    def latest(self, ticker):
+        with _LOCK:
+            r = self.db.execute("SELECT close FROM bars WHERE ticker=? ORDER BY date DESC LIMIT 1", (ticker,)).fetchone()
+        return r[0] if r else None
+
+    def change(self, ticker, days):
+        """% change over the last `days` trading days, or None."""
+        with _LOCK:
+            rows = self.db.execute("SELECT close FROM bars WHERE ticker=? ORDER BY date DESC LIMIT ?",
+                                   (ticker, days + 1)).fetchall()
+        if len(rows) < 2 or not rows[-1][0]:
+            return None
+        return rows[0][0] / rows[-1][0] - 1

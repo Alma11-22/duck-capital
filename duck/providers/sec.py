@@ -22,8 +22,8 @@ RED_FLAG_ITEMS = {
 
 class SEC:
     def __init__(self, email=None):
-        email = email or os.environ.get("SEC_CONTACT_EMAIL", "rebound-ai@example.com")
-        self.headers = {"User-Agent": f"ReboundAI research {email}"}
+        email = email or os.environ.get("SEC_CONTACT_EMAIL", "duck-capital@example.com")
+        self.headers = {"User-Agent": f"DuckCapital research {email}"}
         self._cik = None
 
     def _cik_map(self):

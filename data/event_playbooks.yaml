@@ -1,0 +1,95 @@
+# Duck Capital event playbooks.
+# For each kind of event: how to spot it in headlines, who got hurt and who
+# benefited last time, and the signal that the trade is over.
+# Edit freely: add tickers, add events. "direct" winners benefit first-hand;
+# "second_order" winners benefit one step removed (the less obvious plays).
+
+pandemic:
+  label: Pandemic / health emergency
+  keywords: [pandemic, outbreak, lockdown, quarantine, virus spreads, new variant, who declares, stay-at-home, covid]
+  past: COVID-19, Feb–Mar 2020
+  losers: [DAL, UAL, AAL, CCL, RCL, NCLH, MAR, HLT, BKNG, EXPE, ABNB, LYV]
+  winners:
+    direct: [ZM, MRNA, PFE, TDOC, AMZN, CLX, DOCU, ABT]
+    second_order: [PTON, NFLX, DASH, SHOP, ETSY, LOGI, HD, CHWY]
+  sell_when: Reopening is in sight - vaccine approved, lockdowns lifting, travel bookings recovering.
+
+war:
+  label: War / geopolitical conflict
+  keywords: [invasion, invades, war, missile strike, airstrike, troops, military escalation, nato, ceasefire collapses, conflict escalates]
+  past: Russia invades Ukraine, Feb 2022
+  losers: [DAL, UAL, CCL, BKNG, MAR]
+  winners:
+    direct: [LMT, NOC, RTX, GD, LHX, XOM, CVX, OXY]
+    second_order: [CF, MOS, NTR, LNG, PANW, CRWD, NEM, AEM]
+  sell_when: Ceasefire talks gain traction, or oil falls back to pre-war levels.
+
+tariffs:
+  label: Tariffs / trade war
+  keywords: [tariff, tariffs, trade war, retaliatory, import duties, export controls, de minimis, trade deal collapses]
+  past: Liberation Day tariffs, Apr 2025
+  losers: [AAPL, NKE, GM, F, STLA, TGT, BBY, DECK, VFC, AMZN, TSM]
+  winners:
+    direct: [NUE, STLD, CLF, WMT, COST]
+    second_order: [TJX, ROST, BURL, DG, ROK]
+  sell_when: A deal or pause is announced, or tariffs are rolled back.
+
+rate_shock:
+  label: Rate shock / inflation scare
+  keywords: [rate hike, hawkish, inflation surges, hotter-than-expected, cpi jumps, bond yields soar, treasury selloff, fed signals more hikes]
+  past: Fed hiking cycle, 2022
+  losers: [SHOP, ROKU, DHI, LEN, O, TTD, SNOW]
+  winners:
+    direct: [JPM, BAC, PGR, SCHW]
+    second_order: [BRK.B, XOM, CVX, CB]
+  sell_when: The Fed signals a pause or cuts, or inflation cools for two straight reports.
+
+bank_crisis:
+  label: Bank scare / credit crisis
+  keywords: [bank run, deposit outflows, bank failure, seized by regulators, fdic, liquidity crisis, bank collapse, contagion]
+  past: Silicon Valley Bank collapse, Mar 2023
+  losers: [ZION, WAL, KEY, CMA, FLG, SCHW]
+  winners:
+    direct: [JPM, NEM, AEM]
+    second_order: [COIN, GOLD, V, MA]
+  sell_when: A government backstop is announced and deposit flows stabilize.
+
+ai_breakthrough:
+  label: AI breakthrough
+  keywords: [new ai model, launches gpt, chatgpt, deepseek, reasoning model, ai agent, agi, frontier model, breakthrough model]
+  past: ChatGPT launch Nov 2022; DeepSeek Jan 2025
+  losers: [CHGG, IT, ACN, EPAM, ADBE, CRM, GETY, CNXC, TEAM, HUBS]
+  winners:
+    direct: [NVDA, MSFT, AVGO, AMD, TSM]
+    second_order: [VRT, CEG, VST, ANET, MU, EQIX, DLR]
+  sell_when: Big tech cuts AI spending guidance, or a cheaper-AI shock (like DeepSeek) hits chip demand.
+
+energy_shock:
+  label: Oil / energy shock
+  keywords: [oil prices surge, crude spikes, opec cut, supply disruption, strait of hormuz, refinery outage, energy crisis, gas prices soar]
+  past: Oil spike, Mar–Jun 2022
+  losers: [DAL, UAL, AAL, FDX, UPS, DOW]
+  winners:
+    direct: [XOM, CVX, COP, OXY, VLO, MPC]
+    second_order: [TSLA, FSLR, ENPH, LNG]
+  sell_when: Oil falls back, OPEC raises output, or emergency reserves are released.
+
+disaster:
+  label: Natural disaster
+  keywords: [hurricane, earthquake, wildfire, landfall, flooding, tornado outbreak]
+  past: Hurricane Ian, Sep 2022
+  losers: [TRV, ALL, PGR, PCG]
+  winners:
+    direct: [HD, LOW, GNRC]
+    second_order: [CPRT, BLDR, SHW]
+  sell_when: Rebuild spending normalizes, usually within 1–2 quarters.
+
+cyber:
+  label: Major cyberattack / outage
+  keywords: [cyberattack, ransomware, data breach, hackers, global outage, cyber attack]
+  past: CrowdStrike outage Jul 2024; SolarWinds hack Dec 2020
+  losers: []
+  winners:
+    direct: [CRWD, PANW, ZS, FTNT, S]
+    second_order: [OKTA, NET, CYBR]
+  sell_when: The news cycle passes - usually weeks, not months.

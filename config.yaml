@@ -1,4 +1,4 @@
-# Rebound AI settings. Edit freely.
+# Duck Capital settings. Edit freely.
 
 # --- Drop scanner ---
 drop_threshold: 0.10        # flag stocks down at least 10%...
@@ -33,3 +33,10 @@ tranches: [0.0, -0.10, -0.20]  # staged buys: now, 10% lower, 20% lower
 use_claude: true
 claude_model: claude-sonnet-5-5
 claude_max_stocks: 15       # only the top-scored names get a Claude review
+
+# --- Event radar + event winners ---
+event_news_days: 2          # how many days of market-wide news to read
+event_min_score: 6          # headline hits needed to call an event "live"
+event_confirm_days: 5       # price window used to check the market agrees
+winner_chase_limit: 0.30    # winners already up more than this are flagged "late"
+paper_winner_min_score: 70  # paper-buy event winners scoring at least this

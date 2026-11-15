@@ -42,6 +42,10 @@ class Finnhub:
                 "current_ratio": m.get("currentRatioQuarterly"),
                 "pe": m.get("peTTM"),
                 "revenue_growth": m.get("revenueGrowthTTMYoy"),
+                "eps_growth": m.get("epsGrowthTTMYoy"),
+                "margin_ttm": m.get("netProfitMarginTTM"),
+                "margin_5y": m.get("netProfitMargin5Y"),
+                "roe": m.get("roeTTM"),
                 "high_52w": m.get("52WeekHigh")}
 
     def recommendations(self, ticker):
@@ -68,3 +72,18 @@ class Finnhub:
             elif code == "S":
                 net -= abs(t.get("change", 0))
         return net
+
+    def market_news(self, days=2):
+        """Market-wide headlines (one call)."""
+        import time as _t
+        items = self._get("news", category="general") or []
+        cutoff = _t.time() - days * 86400
+        return [{"headline": n.get("headline", ""), "summary": n.get("summary", ""),
+                 "source": n.get("source", ""), "url": n.get("url", "")}
+                for n in items if n.get("datetime", 0) >= cutoff]
+
+    def earnings_surprises(self, ticker):
+        """Last 4 quarters: list of (actual EPS, estimated EPS)."""
+        rows = self._get("stock/earnings", symbol=ticker) or []
+        return [(r.get("actual"), r.get("estimate")) for r in rows[:4]
+                if r.get("actual") is not None and r.get("estimate") is not None]

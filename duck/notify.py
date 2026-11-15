@@ -1,4 +1,4 @@
-"""Optional morning email with the top picks and early warnings.
+"""Optional morning email with live events, top picks and early warnings.
 
 Sends only if these are set (e.g. as GitHub secrets):
   EMAIL_TO            where to send it (comma-separate several people)
@@ -15,36 +15,43 @@ from email.mime.text import MIMEText
 from .score import BUCKET_LABEL
 
 
-def send(date, drops, warnings, paper_stats):
+def send(date, live, drops, warnings, stats):
     to, user, pw = os.environ.get("EMAIL_TO"), os.environ.get("SMTP_USER"), os.environ.get("SMTP_PASSWORD")
     if not (to and user and pw):
         print("    (email not set up - skipping)")
         return False
     e = html.escape
     url = os.environ.get("REPORT_URL", "")
+    evs = "".join(
+        f"<li><b>{e(ev['label'])}</b>{' (market confirms)' if ev['confirmed'] else ''}: top winners "
+        f"{e(', '.join(w['ticker'] for w in ev.get('winners', [])[:4]))}</li>" for ev in live) or "<li>None today</li>"
     rows = "".join(
         f"<tr><td><b>{e(d['ticker'])}</b></td><td>{d['score']}</td><td>{d['drop']:+.0%}</td>"
-        f"<td>{e(BUCKET_LABEL[d['bucket']])}</td></tr>" for d in drops[:8]) or "<tr><td colspan=4>None today</td></tr>"
+        f"<td>{e(BUCKET_LABEL[d['bucket']])}</td><td>{e(d.get('psych_label', ''))}</td></tr>" for d in drops[:8]) \
+        or "<tr><td colspan=5>None today</td></tr>"
     warns = "".join(f"<li><b>{e(w['ticker'])}</b>: {e((w['headlines'] + w['red_flags'] + [''])[0])}</li>"
                     for w in warnings[:5]) or "<li>None today</li>"
-    hit = f"{paper_stats['hit_rate']:.0%}" if paper_stats["hit_rate"] is not None else "–"
+    s = stats["all"]
+    hit = f"{s['hit_rate']:.0%}" if s["hit_rate"] is not None else "–"
     body = (f"<div style='font-family:sans-serif;font-size:14px'>"
-            f"<h3 style='margin:0'>Rebound AI – {e(date)}</h3>"
-            f"<p>{len(drops)} rebound candidates · {len(warnings)} early warnings · "
-            f"paper hit rate {hit} on {paper_stats['n']} picks</p>"
+            f"<h3 style='margin:0'>🦆 Duck Capital – {e(date)}</h3>"
+            f"<p>{len(live)} live events · {len(drops)} rebound candidates · {len(warnings)} early warnings · "
+            f"paper hit rate {hit} on {s['n']} picks</p>"
+            f"<b>Live events</b><ul>{evs}</ul>"
             f"<b>Early warnings</b><ul>{warns}</ul>"
             f"<b>Top rebound candidates</b><table cellpadding=4 style='border-collapse:collapse'>"
-            f"<tr><th align=left>Stock</th><th>Score</th><th>Drop</th><th align=left>Kind</th></tr>{rows}</table>"
+            f"<tr><th align=left>Stock</th><th>Score</th><th>Drop</th><th align=left>Kind</th>"
+            f"<th align=left>Numbers</th></tr>{rows}</table>"
             + (f"<p><a href='{e(url)}'>Open the full report</a></p>" if url else "")
             + "<p style='color:#888;font-size:12px'>Not investment advice.</p></div>")
     msg = MIMEText(body, "html")
-    msg["Subject"] = f"Rebound AI {date}: {len(drops)} candidates, {len(warnings)} warnings"
+    msg["Subject"] = f"Duck Capital {date}: {len(live)} events, {len(drops)} rebounds, {len(warnings)} warnings"
     msg["From"], msg["To"] = user, to
     try:
         host, port = os.environ.get("SMTP_HOST", "smtp.gmail.com"), int(os.environ.get("SMTP_PORT", "465"))
-        with smtplib.SMTP_SSL(host, port, timeout=30) as s:
-            s.login(user, pw)
-            s.sendmail(user, [x.strip() for x in to.split(",")], msg.as_string())
+        with smtplib.SMTP_SSL(host, port, timeout=30) as srv:
+            srv.login(user, pw)
+            srv.sendmail(user, [x.strip() for x in to.split(",")], msg.as_string())
         print(f"    emailed {to}")
         return True
     except Exception as ex:  # email must never break the scan
