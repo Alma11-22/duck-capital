@@ -1,0 +1,26 @@
+# One-time job: moves uploaded files into their folders. Safe to delete afterwards.
+name: fix-layout
+on:
+  push:
+    paths: [".github/workflows/fix-layout.yml"]
+  workflow_dispatch: {}
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir -p rebound/providers data
+          for f in classify claude http notify portfolio prices report scanners score; do
+            [ -f "$f.py" ] && git mv "$f.py" rebound/
+          done
+          for f in __init__ finnhub massive mock sec; do
+            [ -f "$f.py" ] && git mv "$f.py" rebound/providers/
+          done
+          [ -f library.csv ] && git mv library.csv data/
+          git config user.name "rebound-bot"
+          git config user.email "rebound-bot@users.noreply.github.com"
+          git commit -m "Move files into folders" || echo "nothing to move"
+          git push
