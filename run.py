@@ -13,7 +13,7 @@ import sys
 import yaml
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from duck import classify, claude, events, notify, report  # noqa: E402
+from duck import classify, claude, desk, events, notify, report  # noqa: E402
 from duck.fundamentals import psych_score  # noqa: E402
 from duck.portfolio import Paper  # noqa: E402
 from duck.prices import PriceStore  # noqa: E402
@@ -67,6 +67,8 @@ def main():
         ideas = claude.event_ideas(ev, known, cfg)
         ev["winners"] = events.rank_winners(ev, playbooks, store, details, cfg, extra=ideas)
         for w in ev["winners"]:
+            w["exit_trigger"] = ev["sell_when"]
+        for w in ev["winners"]:
             p = psych_score(details.metrics(w["ticker"]), details.earnings_surprises(w["ticker"]), w["move"])
             w.update(p)
             if p["psych_label"] == "Mostly hype" and (w["move"] or 0) > 0.05:
@@ -116,13 +118,28 @@ def main():
             d["reasons"].append(f"Part of a live event: {d['event']}")
     drops.sort(key=lambda x: -x["score"])
 
-    print("5/6 Claude review of the top names (if ANTHROPIC_API_KEY is set)...")
-    for d in drops[: cfg["claude_max_stocks"]]:
-        c = claude.review(d, d["_news"], d, cfg)
-        if c:
-            d["claude"] = c
-            d["score"] = max(0, min(100, d["score"] + c["adjust"]))
+    print("5/6 The desk: analyst agents review the top names (if ANTHROPIC_API_KEY is set)...")
+    SECT = ("sector_panic", "sector_downturn", "crypto_selloff")
+    cands, per = [], {}
+    for d in drops:  # best first; names within reach of 'Watch' once the desk's +/-15 is applied
+        if d["score"] < cfg["show_min_score"] - 15 or d["drop"] > -cfg["show_min_drop"]:
+            continue
+        k = d["sector_info"]["sector"] if d["bucket"] in SECT and d.get("sector_info") else d["ticker"]
+        per[k] = per.get(k, 0) + 1
+        if per[k] > cfg["desk_max_per_sector"]:
+            continue
+        cands.append(d)
+    cands = cands[: cfg["desk_max_stocks"]]
+    for ev in live:
+        for w in ev.get("winners", [])[: cfg["desk_winners_per_event"]]:
+            w.setdefault("name", w["ticker"])
+            w["event_label"] = ev["label"]
+            cands.append(w)
+    desk_on = desk.run(cands, live, cfg)
     drops.sort(key=lambda x: -x["score"])
+    for ev in live:
+        ev["winners"].sort(key=lambda x: -x["score"])
+    desk_today = desk.summary(cands) if desk_on else []
 
     before = build_before(warnings, live, store, cfg)
     shown = [d for d in drops if d["score"] >= cfg["show_min_score"] and d["drop"] <= -cfg["show_min_drop"]]
@@ -130,8 +147,9 @@ def main():
     print("6/6 Paper portfolio + report...")
     paper = Paper(paper_path)
     picks, per_sector = [], {}
-    for d in drops:  # already sorted best first
-        if d["score"] < cfg["paper_buy_min_score"]:
+    rules_score = lambda x: x.get("score_rules", x["score"])
+    for d in sorted(drops, key=lambda x: -rules_score(x)):  # rules-only record
+        if rules_score(d) < cfg["paper_buy_min_score"]:
             continue
         if d["bucket"] in ("sector_panic", "sector_downturn", "crypto_selloff") and d.get("sector_info"):
             k = d["sector_info"]["sector"]
@@ -141,12 +159,19 @@ def main():
         picks.append(d)
     added = paper.add(asof, picks, "rebound")
     for ev in live:
-        added += paper.add(asof, [w for w in ev["winners"] if w["score"] >= cfg["paper_winner_min_score"]],
-                           "event_winner")
+        ws = sorted((w for w in ev["winners"] if rules_score(w) >= cfg["paper_winner_min_score"]),
+                    key=lambda w: -rules_score(w))[: cfg["paper_max_per_event"]]  # one event is one bet
+        added += paper.add(asof, ws, "event_winner")
+    if desk_on:  # rules + desk record: only names the chair calls Buy and that still score 70+
+        added += paper.add(asof, [d for d in cands if d.get("desk") and d["desk"]["chair"].get("call") == "Buy"
+                                  and d["score"] >= cfg["paper_buy_min_score"]], "desk")
+    exit_alerts = desk.exits(paper.rows, store, live, details, cfg)
     paper.mark(store, asof)
     paper.save()
-    stats = {"all": paper.stats(), "rebound": paper.stats("rebound"), "event_winner": paper.stats("event_winner")}
-    path = report.write(asof, live, shown, before, stats, all_drops=drops, warnings=warnings)
+    stats = {"all": paper.stats(), "rebound": paper.stats("rebound"), "event_winner": paper.stats("event_winner"),
+             "desk": paper.stats("desk"), "rules": paper.stats(("rebound", "event_winner"))}
+    path = report.write(asof, live, shown, before, stats, all_drops=drops, warnings=warnings,
+                        desk_today=desk_today, desk_on=desk_on, exit_alerts=exit_alerts)
     print(f"    {len(live)} live events, {len(shown)} of {len(drops)} rebounds shown, {len(before)} before-the-move, "
           f"{added} new paper picks")
     if not args.demo:

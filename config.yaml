@@ -48,3 +48,13 @@ before_max_items: 10        # "Before the move" list size (watchlist names alway
 before_max_move: 0.03       # "hasn't reacted yet" = moved less than this over 5 days
 event_price_gap: 0.08       # event also goes live if its "hurt" stocks trail the market by this much over a month
 paper_max_per_sector: 5     # paper-buy at most this many stocks from one sector selloff
+paper_max_per_event: 5      # ...and at most this many winners per live event
+
+# The desk (Claude analyst agents; only runs with ANTHROPIC_API_KEY)
+desk_max_stocks: 18         # rebound names reviewed per day
+desk_max_per_sector: 3      # at most this many from one sector selloff
+desk_winners_per_event: 3   # event winners reviewed per live event
+desk_parallel: 3            # stocks reviewed at the same time
+exit_max: 40                # open picks checked by the exit monitor
+stop_loss: 0.25             # without Claude: flag a sell at -25% from entry
+take_profit: 0.30           # without Claude: flag a trim at +30%

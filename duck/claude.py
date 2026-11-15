@@ -6,7 +6,15 @@
 """
 import json
 import os
+import threading
 import urllib.request
+
+USAGE = {"calls": 0, "input_tokens": 0, "output_tokens": 0}
+_U = threading.Lock()
+
+
+def enabled(cfg):
+    return bool(os.environ.get("ANTHROPIC_API_KEY")) and cfg.get("use_claude")
 
 REVIEW_PROMPT = """You are a skeptical equity analyst. A stock sold off on bad news.
 Decide whether the damage is TEMPORARY (sentiment, fixable, or overblown) or REAL
@@ -46,8 +54,13 @@ def _ask(prompt, cfg, max_tokens=500):
                                  headers={"x-api-key": key, "anthropic-version": "2023-06-01",
                                           "content-type": "application/json"})
     try:
-        with urllib.request.urlopen(req, timeout=60) as r:
-            text = json.loads(r.read())["content"][0]["text"]
+        with urllib.request.urlopen(req, timeout=90) as r:
+            resp = json.loads(r.read())
+        text = resp["content"][0]["text"]
+        with _U:
+            USAGE["calls"] += 1
+            USAGE["input_tokens"] += resp.get("usage", {}).get("input_tokens", 0)
+            USAGE["output_tokens"] += resp.get("usage", {}).get("output_tokens", 0)
         return json.loads(text[text.find("{"): text.rfind("}") + 1])
     except Exception as e:  # never let the optional layer break the run
         print(f"  ! Claude call failed: {e}")

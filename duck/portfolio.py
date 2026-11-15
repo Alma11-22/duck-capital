@@ -3,7 +3,7 @@ Two kinds of bets: 'rebound' (bought after a selloff) and 'event_winner' (bought
 import csv
 import os
 
-FIELDS = ["date", "ticker", "type", "reason", "score", "entry", "last_price", "last_date", "return"]
+FIELDS = ["date", "ticker", "type", "reason", "score", "entry", "last_price", "last_date", "return", "exit_trigger"]
 
 
 class Paper:
@@ -22,7 +22,7 @@ class Paper:
             reason = p.get("bucket") or p.get("event", "")
             self.rows.append({"date": date, "ticker": p["ticker"], "type": kind, "reason": reason,
                               "score": p["score"], "entry": p["close"], "last_price": p["close"],
-                              "last_date": date, "return": 0.0})
+                              "last_date": date, "return": 0.0, "exit_trigger": p.get("exit_trigger", "")})
             added += 1
         return added
 
@@ -34,7 +34,8 @@ class Paper:
                 r["return"] = round(px / float(r["entry"]) - 1, 4)
 
     def stats(self, kind=None):
-        rows = [r for r in self.rows if kind is None or r["type"] == kind]
+        kinds = (kind,) if isinstance(kind, str) else kind
+        rows = [r for r in self.rows if kind is None or r["type"] in kinds]
         if not rows:
             return {"n": 0, "hit_rate": None, "avg_return": None}
         rets = [float(r["return"]) for r in rows]
