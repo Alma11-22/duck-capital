@@ -1,0 +1,61 @@
+# Runs Rebound AI every weekday morning on GitHub's servers (free), publishes the
+# report as a web page (GitHub Pages) and, if set up, emails a summary.
+# Keys go under Settings → Secrets and variables → Actions.
+name: daily-scan
+
+on:
+  schedule:
+    - cron: "30 6 * * 2-6"   # 06:30 UTC Tue–Sat = after midnight US Eastern, so the prior day's prices exist
+  workflow_dispatch: {}       # "Run workflow" button for manual runs
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: daily-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Run scan
+        env:
+          MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+          SEC_CONTACT_EMAIL: ${{ secrets.SEC_CONTACT_EMAIL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          REPORT_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+        run: python run.py
+      - name: Save history back to the repo
+        run: |
+          git config user.name "rebound-bot"
+          git config user.email "rebound-bot@users.noreply.github.com"
+          git add data/prices.db data/paper_portfolio.csv reports/
+          git commit -m "Daily scan $(date -u +%F)" || echo "nothing to commit"
+          git push
+      - name: Build web page
+        run: |
+          mkdir -p site
+          cp reports/latest.html site/index.html
+          cp reports/*.html site/ 2>/dev/null || true
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4
