@@ -1,7 +1,7 @@
 ticker,company,when,backlash,bucket,pre,low,today,drop,vs_before,recovered
-NVDA,NVIDIA,Jan–Apr 2025,"DeepSeek ""cheap AI"" scare erased ~$590B in one day, then tariff selloff",ai_fear,147.0,87.0,168.89,-0.408,0.149,1
+NVDA,NVIDIA,Jan–Apr 2025,"DeepSeek ""cheap AI"" scare erased ~$590B in one day, then tariff selloff",sector_panic,147.0,87.0,168.89,-0.408,0.149,1
 GOOGL,Alphabet,Feb–Apr 2025,"Fear ChatGPT kills Google Search, plus DOJ antitrust remedies",ai_fear,206.0,141.0,289.16,-0.316,0.404,1
-AAPL,Apple,Apr 2025,Liberation Day tariffs on China-made iPhones,macro_policy,259.0,169.0,348.78,-0.347,0.347,1
+AAPL,Apple,Apr 2025,Liberation Day tariffs on China-made iPhones,sector_panic,259.0,169.0,348.78,-0.347,0.347,1
 TSLA,Tesla,Feb–Apr 2025,Musk's DOGE role sparked boycotts and showroom vandalism,bad_press,488.0,214.0,381.97,-0.561,-0.217,0
 UNH,UnitedHealth,Dec 2024–Aug 2025,"CEO shot dead, DOJ Medicare fraud probe, guidance pulled, CEO out",bad_press,600.0,234.0,394.15,-0.61,-0.343,0
 NVO,Novo Nordisk,Dec 2024–2026,"CagriSema trial letdown, losing GLP-1 share to Lilly, US price cuts",business_miss,105.0,38.0,40.33,-0.638,-0.616,0
@@ -27,16 +27,16 @@ CRM,Salesforce,Dec 2024–Jun 2026,Fear AI agents shrink seat-based SaaS,ai_fear
 NFLX,Netflix,Oct 2025–Nov 2026,"Brazil tax miss, Warner Bros bidding war, engagement worries (split-adj. 10:1)",business_miss,125.0,61.4,63.26,-0.509,-0.494,0
 AMD,AMD,Mar 2024–Apr 2025,Seen losing the AI chip race to Nvidia,business_miss,227.0,76.0,534.06,-0.665,1.353,1
 ASML,ASML,Jul 2024–Apr 2025,"Weak bookings leaked early, China export curbs",macro_policy,1050.0,580.0,1495.16,-0.448,0.424,1
-MU,Micron,Jun 2024–Apr 2025,Memory-glut fears,business_miss,157.0,62.0,778.31,-0.605,3.957,1
+MU,Micron,Jun 2024–Apr 2025,Memory-glut fears,sector_downturn,157.0,62.0,778.31,-0.605,3.957,1
 ORCL,Oracle,Sep–Dec 2025,AI debt binge and OpenAI-dependence fears,ai_fear,345.0,125.37,125.37,-0.637,-0.637,0
 CRWV,CoreWeave,Jun–Nov 2025,"Data-center delays, heavy debt, insider selling",ai_fear,187.0,53.13,53.13,-0.716,-0.716,0
-AVGO,Broadcom,Dec 2024–Apr 2025,DeepSeek scare + tariffs,ai_fear,250.0,138.0,347.01,-0.448,0.388,1
-MSFT,Microsoft,Jan–Apr 2025,AI capex worries + DeepSeek,ai_fear,450.0,345.0,523.88,-0.233,0.164,1
-AMZN,Amazon,Feb–Apr 2025,Tariffs hitting retail,macro_policy,242.0,161.0,266.66,-0.335,0.102,1
+AVGO,Broadcom,Dec 2024–Apr 2025,DeepSeek scare + tariffs,sector_panic,250.0,138.0,347.01,-0.448,0.388,1
+MSFT,Microsoft,Jan–Apr 2025,AI capex worries + DeepSeek,sector_panic,450.0,345.0,523.88,-0.233,0.164,1
+AMZN,Amazon,Feb–Apr 2025,Tariffs hitting retail,sector_panic,242.0,161.0,266.66,-0.335,0.102,1
 LLY,Eli Lilly,Aug 2025,Oral GLP-1 pill data underwhelmed,business_miss,770.0,624.0,1445.4,-0.19,0.877,1
-HUM,Humana,Nov 2023–Nov 2024,"Medicare star-ratings cut, cost spike",macro_policy,530.0,213.0,450.46,-0.598,-0.15,0
-CNC,Centene,Jul 2025,Pulled guidance on ACA risk-pool shock,business_miss,58.0,25.0,71.26,-0.569,0.229,1
-ELV,Elevance Health,Jul 2024–Jul 2025,Medicaid cost surge,business_miss,560.0,275.0,429.67,-0.509,-0.233,0
+HUM,Humana,Nov 2023–Nov 2024,"Medicare star-ratings cut, cost spike",sector_downturn,530.0,213.0,450.46,-0.598,-0.15,0
+CNC,Centene,Jul 2025,Pulled guidance on ACA risk-pool shock,sector_downturn,58.0,25.0,71.26,-0.569,0.229,1
+ELV,Elevance Health,Jul 2024–Jul 2025,Medicaid cost surge,sector_downturn,560.0,275.0,429.67,-0.509,-0.233,0
 HIMS,Hims & Hers,Feb–Jun 2025,FDA ended compounded Wegovy; Novo cut partnership,macro_policy,72.0,19.74,19.74,-0.726,-0.726,0
 CVNA,Carvana,Jan 2025,"Hindenburg ""accounting grift"" short report",short_report,50.8,29.6,72.37,-0.417,0.425,1
 APP,AppLovin,Feb–Apr 2025,Multiple short reports alleging ad fraud,short_report,510.0,200.0,409.1,-0.608,-0.198,0
@@ -46,9 +46,9 @@ EL,Estée Lauder,Feb 2024–Apr 2025,China travel-retail collapse,business_miss,
 STLA,Stellantis,Mar 2024–Apr 2025,"US inventory glut, CEO exit, dealer revolt",business_miss,29.0,4.26,4.26,-0.853,-0.853,0
 BABA,Alibaba,Nov 2023–Jan 2024,"China economy fears, cloud spinoff cancelled",macro_policy,85.0,67.0,94.39,-0.212,0.11,1
 PDD,PDD (Temu),Aug 2024–Apr 2025,Mgmt warned profits will fall; de minimis tariff hit,business_miss,140.0,78.97,78.97,-0.436,-0.436,0
-TSM,TSMC,Jan–Apr 2025,Tariffs + Taiwan risk,macro_policy,220.0,134.0,398.63,-0.391,0.812,1
-ENPH,Enphase,Dec 2023–2025,Solar demand slump + IRA credit rollback,macro_policy,130.0,26.07,26.07,-0.799,-0.799,0
-FSLR,First Solar,Jun 2024–Apr 2025,IRA repeal fears,macro_policy,306.0,116.0,171.39,-0.621,-0.44,0
+TSM,TSMC,Jan–Apr 2025,Tariffs + Taiwan risk,sector_panic,220.0,134.0,398.63,-0.391,0.812,1
+ENPH,Enphase,Dec 2023–2025,Solar demand slump + IRA credit rollback,sector_downturn,130.0,26.07,26.07,-0.799,-0.799,0
+FSLR,First Solar,Jun 2024–Apr 2025,IRA repeal fears,sector_downturn,306.0,116.0,171.39,-0.621,-0.44,0
 DECK,Deckers (Hoka),Jan–Jun 2025,Hoka growth slowdown,business_miss,224.0,86.84,86.84,-0.612,-0.612,0
 TTD,The Trade Desk,Dec 2024–2026,"First-ever revenue miss, Amazon ad competition",business_miss,140.0,15.68,15.68,-0.888,-0.888,0
 FISV,Fiserv,Mar–Oct 2025,"Guidance collapse, management reset",business_miss,238.0,55.0,63.78,-0.769,-0.732,0
@@ -64,25 +64,25 @@ EW,Edwards Lifesciences,Jul 2024,TAVR growth slowdown,business_miss,94.0,59.0,10
 TMO,Thermo Fisher,Jan–May 2025,"NIH funding cuts, tariffs",macro_policy,620.0,385.0,700.22,-0.379,0.129,1
 REGN,Regeneron,Aug 2024–2025,"Eylea losing to rivals, trial failures",business_miss,1200.0,476.0,955.47,-0.603,-0.204,0
 MRK,Merck,Jun 2024–2025,"Gardasil China halt, Keytruda patent cliff",business_miss,134.0,74.0,147.76,-0.448,0.103,1
-MOH,Molina,Feb–Jul 2025,"Medicaid cost surge, guidance cuts",business_miss,360.0,140.0,209.49,-0.611,-0.418,0
-DAL,Delta,Jan–Apr 2025,Demand + tariff fears (after 2024 CrowdStrike meltdown),macro_policy,69.0,34.7,86.25,-0.497,0.25,1
+MOH,Molina,Feb–Jul 2025,"Medicaid cost surge, guidance cuts",sector_downturn,360.0,140.0,209.49,-0.611,-0.418,0
+DAL,Delta,Jan–Apr 2025,Demand + tariff fears (after 2024 CrowdStrike meltdown),sector_panic,69.0,34.7,86.25,-0.497,0.25,1
 PEP,PepsiCo,May 2024–Jun 2025,"Volume declines, GLP-1 snacking fears",business_miss,180.0,128.0,145.44,-0.289,-0.192,0
 WING,Wingstop,Jun 2024–2025,Same-store sales slowdown,business_miss,430.0,158.86,158.86,-0.631,-0.631,0
-SHOP,Shopify,Feb–Apr 2025,Tariffs + de minimis threat to merchants,macro_policy,120.0,70.0,147.09,-0.417,0.226,1
+SHOP,Shopify,Feb–Apr 2025,Tariffs + de minimis threat to merchants,sector_panic,120.0,70.0,147.09,-0.417,0.226,1
 MDB,MongoDB,Feb 2024–Apr 2025,"Slowing growth, AI fears",business_miss,500.0,140.0,339.78,-0.72,-0.32,0
 SNOW,Snowflake,Feb–Sep 2024,CEO exit + customer data breach,bad_press,235.0,108.0,290.96,-0.54,0.238,1
 RBLX,Roblox,Oct 2024,"Hindenburg report alleging inflated users, child-safety claims",short_report,43.0,38.0,49.9,-0.116,0.16,1
 ADM,Archer-Daniels-Midland,Jan 2024,"Accounting probe, CFO put on leave",short_report,72.0,50.0,72.9,-0.306,0.013,1
-ON,ON Semiconductor,Jul 2024–Apr 2025,Auto/EV chip demand collapse,business_miss,80.0,31.0,71.06,-0.613,-0.112,0
+ON,ON Semiconductor,Jul 2024–Apr 2025,Auto/EV chip demand collapse,sector_downturn,80.0,31.0,71.06,-0.613,-0.112,0
 ULTA,Ulta Beauty,Mar–Aug 2024,"Competition fears (Sephora, Amazon)",business_miss,574.0,309.0,650.97,-0.462,0.134,1
 F,Ford,Jul 2024–Apr 2025,"Warranty costs, EV losses, tariffs",business_miss,14.5,8.4,11.91,-0.421,-0.179,0
-ALB,Albemarle,Nov 2023–Apr 2025,Lithium price crash,business_miss,120.0,49.0,93.54,-0.592,-0.22,0
+ALB,Albemarle,Nov 2023–Apr 2025,Lithium price crash,sector_downturn,120.0,49.0,93.54,-0.592,-0.22,0
 CHTR,Charter,Jul 2025–2026,Broadband subscriber losses,business_miss,420.0,138.39,138.39,-0.671,-0.671,0
 FTNT,Fortinet,Aug 2025,Firewall refresh slowdown warning,business_miss,105.0,75.0,127.22,-0.286,0.212,1
 UPS,UPS,Jan–Apr 2025,Amazon volume cut in half; tariffs,business_miss,136.0,82.0,112.43,-0.397,-0.173,0
 KVUE,Kenvue,Sep 2025,Trump/RFK Jr. linked Tylenol to autism,bad_press,21.0,14.0,19.44,-0.333,-0.074,0
 CBRL,Cracker Barrel,Aug 2025,Logo rebrand backlash went viral,bad_press,58.0,33.0,66.95,-0.431,0.154,1
-OSCR,Oscar Health,Jun–Jul 2025,"ACA risk-adjustment shock, guidance pulled",business_miss,23.0,11.0,31.06,-0.522,0.35,1
+OSCR,Oscar Health,Jun–Jul 2025,"ACA risk-adjustment shock, guidance pulled",sector_downturn,23.0,11.0,31.06,-0.522,0.35,1
 XYZ,Block,Feb–May 2025,"Cash App slowdown, guidance cut",business_miss,100.0,45.0,84.59,-0.55,-0.154,0
 PYPL,PayPal,Feb 2025–2026,Branded-checkout slowdown,business_miss,93.0,55.0,59.24,-0.409,-0.363,0
 LMT,Lockheed Martin,Oct 2024–Jul 2025,"Program charges, lost F-47 fighter contract",business_miss,610.0,418.0,596.11,-0.315,-0.023,0
@@ -95,7 +95,19 @@ BAX,Baxter,Jul 2025,"Novum pump problems, guidance cut",business_miss,37.0,18.0,
 TEAM,Atlassian,Feb 2025–2026,AI threat to seat-based software,ai_fear,326.0,149.99,149.99,-0.54,-0.54,0
 HUBS,HubSpot,Jan 2025–2026,AI search hurting inbound marketing,ai_fear,880.0,217.29,217.29,-0.753,-0.753,0
 WDAY,Workday,Feb 2025–2026,AI fears in HR software,ai_fear,290.0,126.0,196.45,-0.566,-0.323,0
-ANET,Arista Networks,Jan–Apr 2025,DeepSeek scare + tariffs,ai_fear,130.0,60.0,170.8,-0.538,0.314,1
-VRT,Vertiv,Jan–Apr 2025,"DeepSeek ""less infrastructure needed"" scare",ai_fear,150.0,54.0,197.51,-0.64,0.317,1
-CEG,Constellation Energy,Jan–Apr 2025,DeepSeek raised doubts on AI power demand,ai_fear,350.0,161.0,280.2,-0.54,-0.199,0
-GM,General Motors,Jan–Apr 2025,Auto tariffs,macro_policy,55.0,41.0,86.03,-0.255,0.564,1
+ANET,Arista Networks,Jan–Apr 2025,DeepSeek scare + tariffs,sector_panic,130.0,60.0,170.8,-0.538,0.314,1
+VRT,Vertiv,Jan–Apr 2025,"DeepSeek ""less infrastructure needed"" scare",sector_panic,150.0,54.0,197.51,-0.64,0.317,1
+CEG,Constellation Energy,Jan–Apr 2025,DeepSeek raised doubts on AI power demand,sector_panic,350.0,161.0,280.2,-0.54,-0.199,0
+GM,General Motors,Jan–Apr 2025,Auto tariffs,sector_panic,55.0,41.0,86.03,-0.255,0.564,1
+AMAT,Applied Materials,Jul–Aug 2024,"Chip selloff (rotation out of AI, yen carry unwind, China export-curb talk) (low approx.)",sector_panic,255,186,370.5,-0.271,0.453,1
+LRCX,Lam Research,Jul–Aug 2024,Chip selloff (split-adj. 10:1) (low approx.),sector_panic,111,73,225.92,-0.342,1.035,1
+QCOM,Qualcomm,Jul–Aug 2024,"Chip selloff; recovered to a new high May 2026, below it again now (low approx.)",sector_panic,224.73,158,172.47,-0.297,-0.233,0
+ARM,Arm Holdings,Jul–Aug 2024,Chip selloff after record high (low approx.),sector_panic,186.46,100,190.53,-0.464,0.022,1
+MRVL,Marvell,Jul–Aug 2024,Chip selloff (low approx.),sector_panic,80,59,156.76,-0.262,0.959,1
+COIN,Coinbase,Dec 2024–Apr 2025,Crypto selloff (low approx.),crypto_selloff,340,145,127.65,-0.574,-0.625,0
+MSTR,Strategy (MicroStrategy),Nov 2024–Apr 2025,Crypto selloff (low approx.),crypto_selloff,473,237,111.62,-0.499,-0.764,0
+MARA,MARA Holdings,Dec 2024–Apr 2025,Crypto selloff (low approx.),crypto_selloff,28,10,6.99,-0.643,-0.75,0
+RIOT,Riot Platforms,Dec 2024–Apr 2025,Crypto selloff (low approx.),crypto_selloff,15.4,6.19,17.52,-0.598,0.138,1
+HOOD,Robinhood,Feb–Apr 2025,Crypto + market selloff (low approx.),crypto_selloff,66,30,77.86,-0.545,0.18,1
+ZION,Zions Bancorp,Nov 2024–Apr 2025,Regional banks in the tariff selloff (low approx.),sector_panic,63,40,66.34,-0.365,0.053,1
+WAL,Western Alliance,Nov 2024–Apr 2025,Regional banks in the tariff selloff (low approx.),sector_panic,96.45,57,74.79,-0.409,-0.225,0

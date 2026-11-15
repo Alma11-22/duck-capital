@@ -25,7 +25,7 @@ class Finnhub:
     def profile(self, ticker):
         p = self._get("stock/profile2", symbol=ticker) or {}
         return {"name": p.get("name", ticker), "industry": p.get("finnhubIndustry", ""),
-                "market_cap_musd": p.get("marketCapitalization") or 0}
+                "market_cap_musd": p.get("marketCapitalization") or 0, "ipo": p.get("ipo")}
 
     def news(self, ticker, days=3):
         to = dt.date.today()

@@ -25,7 +25,7 @@ def drop_scan(window, details, cfg, log=print):
         if p["market_cap_musd"] < cfg["min_market_cap_musd"]:
             continue
         out.append({"ticker": t, "name": p["name"], "industry": p["industry"],
-                    "market_cap_musd": p["market_cap_musd"], "close": w["close"],
+                    "market_cap_musd": p["market_cap_musd"], "ipo": p.get("ipo"), "close": w["close"],
                     "high": w["high"], "drop": drop})
     log(f"  drop scan: {len(out)} pass the ${cfg['min_market_cap_musd']/1000:.0f}B+ size filter")
     return out
@@ -49,7 +49,7 @@ def early_warning_scan(window, details, sec, cfg, negativity, about=None, log=pr
             news = about(news, t, details.profile(t)["name"])
         neg, top = negativity(news)
         from .classify import serious
-        big = serious(news)
+        big = serious(news, t, details.profile(t)["name"])
         filings = sec.filings(t, days=cfg["news_days"] + 4)
         neg += 3 * len(filings["red_flags"])
         if neg >= cfg["early_warning_min_score"]:

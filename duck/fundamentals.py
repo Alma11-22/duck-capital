@@ -25,7 +25,10 @@ def _health(m, surprises):
         elif e < -10:
             pts -= 1; bad.append(f"Earnings down {e:.0f}% a year")
     mt, m5 = m.get("margin_ttm"), m.get("margin_5y")
-    if mt is not None and m5 is not None:
+    if m.get("recent_listing"):
+        m5 = None
+        good.append("Listed/spun off recently: no 5-year history to compare")
+    if mt is not None and m5 is not None and abs(m5) >= 0.5:
         if mt >= m5 - 1:
             pts += 1; good.append(f"Profit margin holding ({mt:.0f}% vs {m5:.0f}% 5-yr avg)")
         elif mt < m5 - 4:
@@ -60,7 +63,7 @@ def psych_score(m, surprises, move, extra_bad=()):
     else:                               # a rise: weak numbers => hype (psychology)
         s = 50 - eff * 6 * (0.5 + size)
     s = max(0, min(100, round(s)))
-    if s >= 68 and len(good) >= 3 and len(bad) <= 1:
+    if s >= 68 and len([g for g in good if not g.startswith("Listed")]) >= 3 and len(bad) <= 1:
         label = "Mostly psychology" if (move or 0) < 0 else "Mostly hype"
     elif s <= 35:
         label = "Mostly fundamentals"

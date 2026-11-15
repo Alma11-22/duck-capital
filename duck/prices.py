@@ -72,3 +72,10 @@ class PriceStore:
         if len(rows) < 2 or not rows[-1][0]:
             return None
         return rows[0][0] / rows[-1][0] - 1
+
+    def closes(self, ticker, n):
+        """Last n closes, oldest first."""
+        with _LOCK:
+            rows = self.db.execute("SELECT close FROM bars WHERE ticker=? ORDER BY date DESC LIMIT ?",
+                                   (ticker, n)).fetchall()
+        return [r[0] for r in reversed(rows)]

@@ -122,11 +122,29 @@ SERIOUS = ["investigation", "probe", "subpoena", "fraud", "lawsuit", "sued", "cl
            "breach", "hack", "outage", "boycott", "backlash", "scandal", "halt", "default", "going concern"]
 
 
-def serious(news):
-    """Headlines with company-level news that tends to move a stock."""
+GOOD = ["beat", "beats", "raise", "raises", "raised", "upgrade", "upgraded", "record", "soar", "soars", "surge",
+        "surges", "jump", "jumps", "rally", "rallies", "crushed", "crushes", "wins", "approval", "approved",
+        "demonstrated", "positive", "outperform"]
+
+
+def serious(news, ticker=None, name=None):
+    """Headlines with company-level news that tends to move a stock.
+    Whole words only; skips good-news headlines; if ticker/name given, the bad word must sit in the
+    same part of the headline as the company (so 'X resigns from Nvidia, Microsoft faces...' isn't Microsoft's)."""
+    word = lambda k: re.compile(r"\b" + re.escape(k) + r"(s|es|ed|ing)?\b", re.I)
+    bad_res = [word(k) for k in SERIOUS]
+    good_re = re.compile(r"\b(" + "|".join(map(re.escape, GOOD)) + r")\b", re.I)
+    who = None
+    if ticker:
+        who = re.compile(r"\b(" + "|".join(re.escape(x) for x in _names(ticker, name)) + r")\b", re.I)
     out = []
     for n in news:
         h = n.get("headline", "")
-        if any(re.search(r"\b" + re.escape(k), h.lower()) for k in SERIOUS):
-            out.append(h)
+        if good_re.search(h):
+            continue
+        parts = re.split(r"[,;:|]| - | – | — ", h) if who else [h]
+        for part in parts:
+            if any(r.search(part) for r in bad_res) and (who is None or who.search(part)):
+                out.append(h)
+                break
     return out

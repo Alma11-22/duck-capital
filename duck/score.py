@@ -11,6 +11,9 @@ BUCKET_LABEL = {
     "ai_fear": "AI disruption fear",
     "macro_policy": "Macro / policy",
     "business_miss": "Business miss",
+    "sector_panic": "Sector selloff (panic)",
+    "sector_downturn": "Sector downturn",
+    "crypto_selloff": "Crypto selloff",
 }
 
 EXIT_TRIGGERS = {
@@ -19,6 +22,9 @@ EXIT_TRIGGERS = {
     "ai_fear": "Revenue growth slows or customers shrink seats/contracts in the next 2 reports.",
     "macro_policy": "The policy becomes permanent AND guidance is cut because of it.",
     "business_miss": "A second guidance cut, or market share keeps falling to a named competitor.",
+    "sector_panic": "The sector's own numbers start falling (orders, guidance), turning a panic into a downturn.",
+    "sector_downturn": "Another quarter of falling sector demand or margins, with no sign of a bottom.",
+    "crypto_selloff": "Bitcoin keeps making lower lows and crypto fund outflows continue.",
 }
 
 

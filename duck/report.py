@@ -102,6 +102,9 @@ pull it down.</p>
 <p><span class='pill gray'>Under 60</span> &nbsp;Not shown.</p>
 <p><b>Psychology meter:</b> is the drop about mood or numbers? High means the business still looks fine and the price
 fell anyway.</p>
+<p><b>Sector selloff:</b> the stock fell together with its whole sector, with no bad news of its own. A sector
+<i>panic</i> (numbers still healthy) has recovered about 80% of the time; a sector <i>downturn</i> (numbers weakening)
+about 30%; crypto about 40%.</p>
 <p style=margin-bottom:0><b>Before the move:</b> news that matters, price hasn't reacted yet. Not a buy signal on its
 own; it's your head start.</p></div>"""
 
@@ -112,8 +115,15 @@ def write(date, live, drops, before, stats, all_drops=None, warnings=None, outdi
     all_drops = drops if all_drops is None else all_drops
     warnings = warnings or []
     e = html.escape
-    buy = [d for d in drops if d["score"] >= 70]
-    watch = [d for d in drops if d["score"] < 70]
+    SECT = ("sector_panic", "sector_downturn", "crypto_selloff")
+    company = [d for d in drops if d["bucket"] not in SECT]
+    buy = [d for d in company if d["score"] >= 70]
+    watch = [d for d in company if d["score"] < 70]
+    groups = {}
+    for d in all_drops:
+        if d["bucket"] in SECT and d.get("sector_info"):
+            groups.setdefault(d["sector_info"]["sector"], []).append(d)
+    groups = sorted(groups.items(), key=lambda kv: -len(kv[1]))
     p = [f"<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>"
          f"<title>Duck Capital – {e(date)}</title><style>{CSS}</style><main>",
          f"<div class=brand>DUCK CAPITAL</div><h1>Today's events, winners and overreactions.</h1>"
@@ -122,6 +132,7 @@ def write(date, live, drops, before, stats, all_drops=None, warnings=None, outdi
     p.append("<div class=kpis>"
              f"<div class=kpi>Live events<b>{len(live)}</b></div>"
              f"<div class=kpi>Before the move<b>{len(before)}</b></div>"
+             f"<div class=kpi>Sector selloffs<b>{sum(len(v) for _, v in groups)}</b></div>"
              f"<div class=kpi>Buy<b>{len(buy)}</b></div>"
              f"<div class=kpi>Watch<b>{len(watch)}</b></div>"
              f"<div class=kpi>Paper hit rate<b>{hit}</b></div>"
@@ -185,12 +196,34 @@ def write(date, live, drops, before, stats, all_drops=None, warnings=None, outdi
                  f"<div class=meta><b>Who gets hurt:</b> {e(losers)}</div>"
                  f"<div class=meta><b>Sell when:</b> {e(ev['sell_when'])}</div></div>")
 
-    # --- Buy / Watch ---
-    p.append(f"<h2>Buy (70+): sold off, strong recovery odds</h2>")
+    # --- Sector selloffs ---
+    p.append("<h2>Sector selloffs: fell with the whole sector</h2>")
+    if not groups:
+        p.append("<div class=meta>None today.</div>")
+    for name, ds in groups:
+        ds = sorted(ds, key=lambda x: -x["score"])
+        sd = ds[0]["sector_info"]["sector_drop"]
+        kinds = {b: sum(1 for d in ds if d["bucket"] == b) for b in SECT}
+        kind = ("Crypto selloff: past cases recovered 40% of the time" if kinds["crypto_selloff"] else
+                f"{kinds['sector_panic']} look like panic (numbers still healthy), "
+                f"{kinds['sector_downturn']} like a real downturn (numbers weakening)")
+        rows = "".join(
+            f"<tr><td><b>{e(d['ticker'])}</b><div class=small>{e(d['name'][:28])}</div></td>"
+            f"<td><span class='pill {_cls(d['score'])}'>{d['score']}</span></td><td>{d['drop']:+.0%}</td>"
+            f"<td class=small>{e(BUCKET_LABEL[d['bucket']])}</td><td class=small>{e(d.get('psych_label', ''))}</td></tr>"
+            for d in ds[:5])
+        p.append(f"<div class='card event'><div class=top><span class=t>{e(name)}</span>"
+                 f"<span class='pill gray'>{len(ds)} stocks</span></div>"
+                 f"<div class=meta>Sector {sd:+.0%} from its 1-month high · {e(kind)}</div>"
+                 f"<b style='display:block;margin-top:10px'>Best 5</b>"
+                 f"<table><tr><th>Stock</th><th>Score</th><th>Drop</th><th>Kind</th><th>Numbers</th></tr>{rows}</table></div>")
+
+    # --- Company-specific Buy / Watch ---
+    p.append(f"<h2>Buy (70+): fell on its own news, strong recovery odds</h2>")
     p.extend([_rebound_card(d, e) for d in buy] or ["<div class=meta>None today.</div>"])
-    p.append(f"<h2>Watch (60–69): interesting, not yet</h2>")
+    p.append(f"<h2>Watch (60–69): fell on its own news, not yet</h2>")
     p.extend([_rebound_card(d, e) for d in watch] or ["<div class=meta>None today.</div>"])
-    hidden = len(all_drops) - len(drops)
+    hidden = len([d for d in all_drops if d["bucket"] not in SECT]) - len(company)
     repo = os.environ.get("GITHUB_REPOSITORY", "Alma11-22/duck-capital")
     csv_url = f"https://github.com/{repo}/blob/main/reports/{date}-rebounds.csv"
     if hidden:
@@ -215,12 +248,13 @@ def write(date, live, drops, before, stats, all_drops=None, warnings=None, outdi
     with open(f"{outdir}/{date}-rebounds.csv", "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["ticker", "name", "score", "drop", "bucket", "event", "psychology", "psych_label", "close",
-                    "market_cap_musd", "buy_plan", "claude_verdict", "reasons"])
+                    "market_cap_musd", "buy_plan", "claude_verdict", "sector", "sector_drop", "reasons"])
         for d in all_drops:
             w.writerow([d["ticker"], d["name"], d["score"], round(d["drop"], 3), d["bucket"], d.get("event") or "",
                         d.get("psych"), d.get("psych_label"), d["close"], d["market_cap_musd"],
                         " / ".join(map(str, d["buy_plan"])), (d.get("claude") or {}).get("verdict", ""),
-                        " | ".join(d["reasons"])])
+                        (d.get("sector_info") or {}).get("sector", ""),
+                        (d.get("sector_info") or {}).get("sector_drop", ""), " | ".join(d["reasons"])])
     with open(f"{outdir}/{date}-event-winners.csv", "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["event", "ticker", "kind", "score", "move_5d", "psychology", "psych_label", "close", "reasons"])

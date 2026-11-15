@@ -18,6 +18,8 @@ from duck.fundamentals import psych_score  # noqa: E402
 from duck.portfolio import Paper  # noqa: E402
 from duck.prices import PriceStore  # noqa: E402
 from duck.scanners import drop_scan, early_warning_scan  # noqa: E402
+from duck.sector import SectorCheck  # noqa: E402
+import datetime as dt  # noqa: E402
 from duck.score import Library, score  # noqa: E402
 
 
@@ -51,7 +53,9 @@ def main():
     print("2/6 Running the scans at the same time (event radar, drops, early warnings)...")
     playbooks = events.load_playbooks()
     with cf.ThreadPoolExecutor(max_workers=3) as pool:
-        f_evt = pool.submit(lambda: events.detect(details.market_news(cfg["event_news_days"]),
+        # read news back to the last trading day (a Sunday run still sees Friday's news)
+        news_days = max(cfg["event_news_days"], (dt.date.today() - dt.date.fromisoformat(asof)).days + 2)
+        f_evt = pool.submit(lambda: events.detect(details.market_news(news_days),
                                                   playbooks, store, cfg))
         f_drop = pool.submit(drop_scan, window, details, cfg)
         f_warn = pool.submit(early_warning_scan, window, details, sec, cfg, classify.negativity, classify.about)
@@ -75,6 +79,7 @@ def main():
 
     print("4/6 Checking each dropped stock (news, financials, insiders, analysts, SEC)...")
     lib = Library()
+    sectors = SectorCheck(store)
     for d in drops:
         t = d["ticker"]
         raw = details.news(t, cfg["lookback_days"])
@@ -85,12 +90,24 @@ def main():
         d["insiders"] = details.insiders(t)
         d["rec_change"] = details.recommendations(t)
         d["metrics"] = details.metrics(t)
+        d["metrics"]["recent_listing"] = _recent(d.get("ipo"))
         d["red_flags"] = sec.filings(t)["red_flags"]
         d["event"] = next((ev["label"] for ev in live if t in ev["loser_tickers"]), None)
-        d.update(score(d, lib, cfg))
         p = psych_score(d["metrics"], details.earnings_surprises(t), d["drop"],
                         extra_bad=["SEC red-flag filing"] if d["red_flags"] else ())
         d.update(p)
+        # Fell with its sector and no serious news of its own? Then it's a sector selloff.
+        sc = sectors.check(t, d["drop"])
+        d["sector_info"] = sc
+        if sc and sc["is_sector"] and not classify.serious(news) and not d["red_flags"]:
+            if sc["etf"] == "IBIT":
+                d["bucket"] = "crypto_selloff"
+            else:
+                d["bucket"] = "sector_panic" if p["psych"] >= 50 else "sector_downturn"
+        d.update(score(d, lib, cfg))
+        if sc and d["bucket"] in ("sector_panic", "sector_downturn", "crypto_selloff"):
+            d["reasons"].insert(1, f"Fell with its sector: {sc['sector']} {sc['sector_drop']:+.0%}, "
+                                   f"this stock {d['drop']:+.0%}")
         if p["psych_label"] == "Mostly psychology":
             d["score"] = min(100, d["score"] + 8); d["reasons"].append("Numbers still healthy: drop looks like psychology")
         elif p["psych"] <= 35:
@@ -127,6 +144,13 @@ def main():
     print(f"Done -> {path}")
 
 
+def _recent(ipo, years=3):
+    try:
+        return (dt.date.today() - dt.date.fromisoformat(ipo)).days < years * 365
+    except (TypeError, ValueError):
+        return False
+
+
 def build_before(warnings, live, store, cfg):
     """Stocks where something real just happened but the price hasn't reacted much yet."""
     d5 = cfg["event_confirm_days"]
@@ -144,13 +168,13 @@ def build_before(warnings, live, store, cfg):
         it["red_flags"] += list(flags)
 
     for w in warnings:
+        mv = store.change(w["ticker"], d5)
+        if mv is not None and abs(mv) > cfg["before_max_move"]:
+            continue  # already moved: not "before" anymore
         if w["serious"] or w["red_flags"]:
             add(w["ticker"], w["close"], w["drop"], w["neg_score"] + 5 * len(w["red_flags"]),
                 "Serious company news" if w["serious"] else "SEC red-flag filing", "bad",
                 w["on_watchlist"], w["serious"][:2], w["red_flags"])
-        elif w["on_watchlist"]:
-            add(w["ticker"], w["close"], w["drop"], w["neg_score"], "Negative news on your watchlist", "bad",
-                True, w["headlines"][:2])
     lim = cfg["before_max_move"]
     for ev in live:
         for t in ev.get("loser_tickers", []):
