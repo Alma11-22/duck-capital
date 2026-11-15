@@ -1,1 +1,21 @@
 date,ticker,type,reason,score,entry,last_price,last_date,return,exit_trigger
+2026-11-13,TTMI,rebound,sector_panic,84,74.08,74.08,2026-11-13,0.0,"The sector's own numbers start falling (orders, guidance), turning a panic into a downturn."
+2026-11-13,SKHY,rebound,sector_panic,78,131.79,131.79,2026-11-13,0.0,"The sector's own numbers start falling (orders, guidance), turning a panic into a downturn."
+2026-11-13,NVT,rebound,sector_panic,76,114.69,114.69,2026-11-13,0.0,"The sector's own numbers start falling (orders, guidance), turning a panic into a downturn."
+2026-11-13,TER,rebound,sector_panic,75,249.55,249.55,2026-11-13,0.0,"The sector's own numbers start falling (orders, guidance), turning a panic into a downturn."
+2026-11-13,PLTR,rebound,sector_panic,74,167.99,167.99,2026-11-13,0.0,"The sector's own numbers start falling (orders, guidance), turning a panic into a downturn."
+2026-11-13,AMAT,rebound,sector_panic,74,370.5,370.5,2026-11-13,0.0,"The sector's own numbers start falling (orders, guidance), turning a panic into a downturn."
+2026-11-13,OKTA,rebound,sector_panic,74,182.87,182.87,2026-11-13,0.0,"The sector's own numbers start falling (orders, guidance), turning a panic into a downturn."
+2026-11-13,P,rebound,sector_panic,74,107.99,107.99,2026-11-13,0.0,"The sector's own numbers start falling (orders, guidance), turning a panic into a downturn."
+2026-11-13,RTX,event_winner,War / geopolitical conflict,90,198.58,198.58,2026-11-13,0.0,"Ceasefire talks gain traction, or oil falls back to pre-war levels."
+2026-11-13,LHX,event_winner,War / geopolitical conflict,90,272.35,272.35,2026-11-13,0.0,"Ceasefire talks gain traction, or oil falls back to pre-war levels."
+2026-11-13,CVX,event_winner,War / geopolitical conflict,90,219.89,219.89,2026-11-13,0.0,"Ceasefire talks gain traction, or oil falls back to pre-war levels."
+2026-11-13,OXY,event_winner,War / geopolitical conflict,90,58.75,58.75,2026-11-13,0.0,"Ceasefire talks gain traction, or oil falls back to pre-war levels."
+2026-11-13,NOC,event_winner,War / geopolitical conflict,85,550.43,550.43,2026-11-13,0.0,"Ceasefire talks gain traction, or oil falls back to pre-war levels."
+2026-11-13,COST,event_winner,AI trade unwind / chip selloff,75,1106.21,1106.21,2026-11-13,0.0,"Big tech reaffirms AI spending, or chip stocks put in two weeks of higher lows."
+2026-11-13,KO,event_winner,AI trade unwind / chip selloff,75,99.25,99.25,2026-11-13,0.0,"Big tech reaffirms AI spending, or chip stocks put in two weeks of higher lows."
+2026-11-13,JNJ,event_winner,AI trade unwind / chip selloff,75,285.75,285.75,2026-11-13,0.0,"Big tech reaffirms AI spending, or chip stocks put in two weeks of higher lows."
+2026-11-13,BRK.B,event_winner,AI trade unwind / chip selloff,75,592.94,592.94,2026-11-13,0.0,"Big tech reaffirms AI spending, or chip stocks put in two weeks of higher lows."
+2026-11-13,WMT,event_winner,AI trade unwind / chip selloff,70,128.09,128.09,2026-11-13,0.0,"Big tech reaffirms AI spending, or chip stocks put in two weeks of higher lows."
+2026-11-13,CME,event_winner,Crypto crash,70,317.97,317.97,2026-11-13,0.0,Bitcoin reclaims its 50-day average and fund outflows stop.
+2026-11-13,ICE,event_winner,Crypto crash,70,178.51,178.51,2026-11-13,0.0,Bitcoin reclaims its 50-day average and fund outflows stop.
