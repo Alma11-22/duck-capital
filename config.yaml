@@ -26,7 +26,7 @@ early_warning_min_score: 3  # negative-news score needed to alert
 early_warning_max_drop: 0.10 # only alert if the stock hasn't already dropped this much
 
 # --- Scoring / paper portfolio ---
-paper_buy_min_score: 65     # paper-buy anything scoring at least this
+paper_buy_min_score: 70     # paper-buy anything scoring at least this ("Buy" on the page)
 tranches: [0.0, -0.10, -0.20]  # staged buys: now, 10% lower, 20% lower
 
 # --- Optional Claude judgment layer (needs ANTHROPIC_API_KEY) ---
@@ -40,3 +40,9 @@ event_min_score: 6          # headline hits needed to call an event "live"
 event_confirm_days: 5       # price window used to check the market agrees
 winner_chase_limit: 0.30    # winners already up more than this are flagged "late"
 paper_winner_min_score: 70  # paper-buy event winners scoring at least this
+
+# What the page shows (everything still goes in the CSV downloads)
+show_min_score: 60          # rebounds below this are hidden ("Watch" = 60-69, "Buy" = 70+)
+show_min_drop: 0.15         # rebounds must be down at least this much
+before_max_items: 10        # "Before the move" list size (watchlist names always included)
+before_max_move: 0.03       # "hasn't reacted yet" = moved less than this over 5 days

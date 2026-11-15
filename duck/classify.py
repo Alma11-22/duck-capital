@@ -113,3 +113,20 @@ def negativity(news):
         score += min(max(s, 0), 4)
     flagged.sort(reverse=True)
     return score, [h for _, h in flagged[:3]]
+
+
+SERIOUS = ["investigation", "probe", "subpoena", "fraud", "lawsuit", "sued", "class action", "recall",
+           "cuts guidance", "lowers guidance", "cuts outlook", "lowers outlook", "slashes forecast", "warns",
+           "resigns", "steps down", "ousted", "fired", "short seller", "short-seller", "short report",
+           "restate", "auditor", "delist", "bankrupt", "chapter 11", "fda rejects", "complete response letter",
+           "breach", "hack", "outage", "boycott", "backlash", "scandal", "halt", "default", "going concern"]
+
+
+def serious(news):
+    """Headlines with company-level news that tends to move a stock."""
+    out = []
+    for n in news:
+        h = n.get("headline", "")
+        if any(re.search(r"\b" + re.escape(k), h.lower()) for k in SERIOUS):
+            out.append(h)
+    return out

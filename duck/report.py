@@ -39,7 +39,7 @@ a{color:var(--accent-ink)}
 
 
 def _cls(s):
-    return "hi" if s >= 65 else "mid" if s >= 45 else "lo"
+    return "hi" if s >= 70 else "mid" if s >= 60 else "gray"
 
 
 def _pct(x):
@@ -62,9 +62,58 @@ def _stat(s):
     return hit, avg, s["n"]
 
 
-def write(date, live, drops, warnings, stats, outdir="reports"):
+def _rebound_card(d, e):
+    reasons = "".join(f"<li>{e(r)}</li>" for r in d["reasons"])
+    heads = "".join(f"<li>{e(h)}</li>" for h in d["headlines"][:3])
+    plan = " → ".join(f"${x:,.2f}" for x in d["buy_plan"])
+    ev = f" · <b>{e(d['event'])}</b>" if d.get("event") else ""
+    thesis = ""
+    if d.get("claude"):
+        c = d["claude"]
+        thesis = (f"<div class=thesis><b>Claude: {e(c.get('verdict', '?'))}</b> "
+                  f"({c.get('adjust', 0):+d}) — {e(c.get('thesis', ''))}</div>")
+    return (f"<div class=card><div class=top><span class=t>{e(d['ticker'])} · {e(d['name'])}</span>"
+            f"<span class='pill {_cls(d['score'])}'>{d['score']}</span></div>"
+            f"<div class=meta>${d['close']:,.2f} · {d['drop']:+.0%} from recent high · "
+            f"{e(BUCKET_LABEL[d['bucket']])} · ${d['market_cap_musd']/1000:,.0f}B{ev}</div>"
+            f"{'<b>News</b><ul>' + heads + '</ul>' if heads else ''}{_psych(d, e)}"
+            f"<b>Why this score</b><ul>{reasons}</ul>"
+            f"<div class=meta><b>Similar past cases:</b> {e(', '.join(d['analogs']))}</div>"
+            f"<div class=meta><b>Staged buy levels:</b> {plan}</div>"
+            f"<div class=meta><b>Thesis breaks if:</b> {e(d['exit_trigger'])}</div>{thesis}</div>")
+
+
+def _main_reason(d):
+    bits = [f"{d['drop']:+.0%} on {BUCKET_LABEL[d['bucket']].lower()} news"]
+    if d.get("psych_label") in ("Mostly psychology", "Mostly fundamentals"):
+        bits.append(d["psych_label"].lower())
+    extra = [r for r in d["reasons"][1:] if not r.startswith(("Deep drop", "Numbers still", "The numbers"))]
+    if extra:
+        bits.append(extra[0].lower())
+    return "; ".join(bits)
+
+
+HOW = """<h2>How to read the score (0–100)</h2><div class=card>
+<p style=margin-top:0>It starts from history: how often past selloffs of the same kind recovered. Then it adjusts.
+Insiders buying, analysts upgrading and healthy numbers push it up. Heavy debt, SEC red flags and missed earnings
+pull it down.</p>
+<p><span class='pill hi'>70+ Buy</span> &nbsp;The paper portfolio buys in three steps (now, −10%, −20%).</p>
+<p><span class='pill mid'>60–69 Watch</span> &nbsp;Interesting, but not yet.</p>
+<p><span class='pill gray'>Under 60</span> &nbsp;Not shown.</p>
+<p><b>Psychology meter:</b> is the drop about mood or numbers? High means the business still looks fine and the price
+fell anyway.</p>
+<p style=margin-bottom:0><b>Before the move:</b> news that matters, price hasn't reacted yet. Not a buy signal on its
+own; it's your head start.</p></div>"""
+
+
+def write(date, live, drops, before, stats, all_drops=None, warnings=None, outdir="reports"):
+    """drops: rebounds to show (already filtered). all_drops/warnings: full lists for the CSVs."""
     os.makedirs(outdir, exist_ok=True)
+    all_drops = drops if all_drops is None else all_drops
+    warnings = warnings or []
     e = html.escape
+    buy = [d for d in drops if d["score"] >= 70]
+    watch = [d for d in drops if d["score"] < 70]
     p = [f"<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>"
          f"<title>Duck Capital – {e(date)}</title><style>{CSS}</style><main>",
          f"<div class=brand>DUCK CAPITAL</div><h1>Today's events, winners and overreactions.</h1>"
@@ -72,11 +121,47 @@ def write(date, live, drops, warnings, stats, outdir="reports"):
     hit, avg, n = _stat(stats["all"])
     p.append("<div class=kpis>"
              f"<div class=kpi>Live events<b>{len(live)}</b></div>"
-             f"<div class=kpi>Rebound candidates<b>{len(drops)}</b></div>"
-             f"<div class=kpi>Early warnings<b>{len(warnings)}</b></div>"
-             f"<div class=kpi>Paper picks<b>{n}</b></div>"
+             f"<div class=kpi>Before the move<b>{len(before)}</b></div>"
+             f"<div class=kpi>Buy<b>{len(buy)}</b></div>"
+             f"<div class=kpi>Watch<b>{len(watch)}</b></div>"
              f"<div class=kpi>Paper hit rate<b>{hit}</b></div>"
              f"<div class=kpi>Paper avg return<b>{avg}</b></div></div>")
+
+    # --- Top 5 ---
+    top = [(d["score"], d["ticker"], _main_reason(d), "Buy" if d["score"] >= 70 else "Watch") for d in drops]
+    for ev in live:
+        for w in ev.get("winners", []):
+            if w["score"] >= 60:
+                top.append((w["score"], w["ticker"], f"benefits from {ev['label'].lower()}; {_pct(w['move'])} over 5 days",
+                            "Buy" if w["score"] >= 70 else "Watch"))
+    seen, rows = set(), []
+    for s, t, why, act in sorted(top, key=lambda x: -x[0]):
+        if t in seen:
+            continue
+        seen.add(t)
+        rows.append(f"<tr><td><b>{e(t)}</b></td><td><span class='pill {_cls(s)}'>{s}</span></td>"
+                    f"<td>{act}</td><td class=small>{e(why)}</td></tr>")
+        if len(rows) == 5:
+            break
+    p.append("<h2>Top 5 today</h2>" + (f"<div class=card><table><tr><th>Stock</th><th>Score</th><th></th>"
+             f"<th>Main reason</th></tr>{''.join(rows)}</table></div>" if rows else "<div class=meta>Nothing scores 60+ today.</div>"))
+
+    # --- Before the move ---
+    p.append("<h2>Before the move: news that matters, price hasn't reacted</h2>")
+    if not before:
+        p.append("<div class=meta>Nothing today.</div>")
+    for b in before:
+        tag = " <span class='pill gray'>watchlist</span>" if b["on_watchlist"] else ""
+        pill = {"bad": "<span class='pill lo'>looks bad for the stock</span>",
+                "good": "<span class='pill hi'>looks good for the stock</span>",
+                "mixed": "<span class='pill mid'>mixed</span>"}[b["direction"]]
+        items = "".join(f"<li>{e(h)}</li>" for h in b["headlines"][:3] + b["red_flags"])
+        mv = f"{_pct(b['move'])} over 5 days" if b["move"] is not None else ""
+        hi = f" · {b['drop']:+.0%} from recent high" if b.get("drop") is not None else ""
+        p.append(f"<div class=card><div class=top><span class=t>{e(b['ticker'])}{tag}</span>{pill}</div>"
+                 f"<div class=meta>${b['close']:,.2f} · price so far: {mv}{hi}</div>"
+                 f"<div class=meta><b>What happened:</b> {e('; '.join(dict.fromkeys(b['why'])))}</div>"
+                 + (f"<ul>{items}</ul>" if items else "") + "</div>")
 
     # --- Events ---
     p.append("<h2>Live events: who wins, who loses</h2>")
@@ -86,55 +171,33 @@ def write(date, live, drops, warnings, stats, outdir="reports"):
         conf = ("<span class='pill hi'>market confirms</span>" if ev["confirmed"]
                 else "<span class='pill gray'>not confirmed by prices yet</span>")
         heads = "".join(f"<li>{e(h)}</li>" for h in ev["headlines"])
-        rows = "".join(
+        wrows = "".join(
             f"<tr><td><b>{e(w['ticker'])}</b><div class=small>{e(w['kind'].replace('_', '-'))}</div></td>"
             f"<td><span class='pill {_cls(w['score'])}'>{w['score']}</span></td>"
             f"<td>{_pct(w['move'])}</td><td class=small>{e(w.get('psych_label', ''))}</td>"
-            f"<td class=small>{e('; '.join(w['reasons'][:3]))}</td></tr>" for w in ev.get("winners", [])[:10])
+            f"<td class=small>{e('; '.join(w['reasons'][:3]))}</td></tr>" for w in ev.get("winners", [])[:8])
         losers = ", ".join(sorted(ev.get("loser_tickers", []))) or "–"
         p.append(f"<div class='card event'><div class=top><span class=t>{e(ev['label'])}</span>{conf}</div>"
                  f"<div class=meta>Like: {e(ev['past'])} · playbook losers {_pct(ev['losers_move'])}, "
                  f"winners {_pct(ev['winners_move'])} over 5 days</div><ul>{heads}</ul>"
-                 f"<b style='display:block;margin-top:10px'>Winners</b>"
-                 f"<table><tr><th>Stock</th><th>Score</th><th>5-day</th><th>Numbers</th><th>Why</th></tr>{rows}</table>"
-                 f"<div class=meta><b>Likely losers:</b> {e(losers)} (see rebound list below)</div>"
+                 f"<b style='display:block;margin-top:10px'>Who benefits</b>"
+                 f"<table><tr><th>Stock</th><th>Score</th><th>5-day</th><th>Numbers</th><th>Why</th></tr>{wrows}</table>"
+                 f"<div class=meta><b>Who gets hurt:</b> {e(losers)}</div>"
                  f"<div class=meta><b>Sell when:</b> {e(ev['sell_when'])}</div></div>")
 
-    # --- Early warnings ---
-    p.append("<h2>Early warnings: bad news, no big drop yet</h2>")
-    if not warnings:
-        p.append("<div class=meta>None today.</div>")
-    for w in warnings:
-        tag = " <span class='pill lo'>watchlist</span>" if w["on_watchlist"] else ""
-        items = "".join(f"<li>{e(h)}</li>" for h in w["headlines"] + w["red_flags"])
-        p.append(f"<div class=card><div class=top><span class=t>{e(w['ticker'])}{tag}</span>"
-                 f"<span class='pill lo'>risk {w['neg_score']}</span></div>"
-                 f"<div class=meta>${w['close']:,.2f} · {w['drop']:+.0%} from recent high</div><ul>{items}</ul></div>")
+    # --- Buy / Watch ---
+    p.append(f"<h2>Buy (70+): sold off, strong recovery odds</h2>")
+    p.extend([_rebound_card(d, e) for d in buy] or ["<div class=meta>None today.</div>"])
+    p.append(f"<h2>Watch (60–69): interesting, not yet</h2>")
+    p.extend([_rebound_card(d, e) for d in watch] or ["<div class=meta>None today.</div>"])
+    hidden = len(all_drops) - len(drops)
+    repo = os.environ.get("GITHUB_REPOSITORY", "Alma11-22/duck-capital")
+    csv_url = f"https://github.com/{repo}/blob/main/reports/{date}-rebounds.csv"
+    if hidden:
+        p.append(f"<div class=meta>{hidden} smaller or lower-scoring drops hidden; they're in the "
+                 f"<a href='{e(csv_url)}'>full download</a>.</div>")
 
-    # --- Rebounds ---
-    p.append("<h2>Rebound candidates: sold off, ranked by recovery odds</h2>")
-    if not drops:
-        p.append("<div class=meta>None today.</div>")
-    for d in drops:
-        reasons = "".join(f"<li>{e(r)}</li>" for r in d["reasons"])
-        heads = "".join(f"<li>{e(h)}</li>" for h in d["headlines"][:3])
-        plan = " → ".join(f"${x:,.2f}" for x in d["buy_plan"])
-        ev = f" · <b>{e(d['event'])}</b>" if d.get("event") else ""
-        thesis = ""
-        if d.get("claude"):
-            c = d["claude"]
-            thesis = (f"<div class=thesis><b>Claude: {e(c.get('verdict', '?'))}</b> "
-                      f"({c.get('adjust', 0):+d}) — {e(c.get('thesis', ''))}</div>")
-        p.append(
-            f"<div class=card><div class=top><span class=t>{e(d['ticker'])} · {e(d['name'])}</span>"
-            f"<span class='pill {_cls(d['score'])}'>{d['score']}</span></div>"
-            f"<div class=meta>${d['close']:,.2f} · {d['drop']:+.0%} from recent high · "
-            f"{e(BUCKET_LABEL[d['bucket']])} · ${d['market_cap_musd']/1000:,.0f}B{ev}</div>"
-            f"{'<b>News</b><ul>' + heads + '</ul>' if heads else ''}{_psych(d, e)}"
-            f"<b>Why this score</b><ul>{reasons}</ul>"
-            f"<div class=meta><b>Similar past cases:</b> {e(', '.join(d['analogs']))}</div>"
-            f"<div class=meta><b>Staged buy levels:</b> {plan}</div>"
-            f"<div class=meta><b>Thesis breaks if:</b> {e(d['exit_trigger'])}</div>{thesis}</div>")
+    p.append(HOW)
 
     # --- Paper portfolio ---
     rh, ra, rn = _stat(stats["rebound"])
@@ -153,7 +216,7 @@ def write(date, live, drops, warnings, stats, outdir="reports"):
         w = csv.writer(f)
         w.writerow(["ticker", "name", "score", "drop", "bucket", "event", "psychology", "psych_label", "close",
                     "market_cap_musd", "buy_plan", "claude_verdict", "reasons"])
-        for d in drops:
+        for d in all_drops:
             w.writerow([d["ticker"], d["name"], d["score"], round(d["drop"], 3), d["bucket"], d.get("event") or "",
                         d.get("psych"), d.get("psych_label"), d["close"], d["market_cap_musd"],
                         " / ".join(map(str, d["buy_plan"])), (d.get("claude") or {}).get("verdict", ""),
@@ -166,6 +229,12 @@ def write(date, live, drops, warnings, stats, outdir="reports"):
                 w.writerow([ev["label"], x["ticker"], x["kind"], x["score"],
                             None if x["move"] is None else round(x["move"], 3), x.get("psych"),
                             x.get("psych_label"), x["close"], " | ".join(x["reasons"])])
+    with open(f"{outdir}/{date}-before-the-move.csv", "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["ticker", "direction", "move_5d", "close", "watchlist", "what_happened", "headlines"])
+        for b in before:
+            w.writerow([b["ticker"], b["direction"], None if b["move"] is None else round(b["move"], 3), b["close"],
+                        b["on_watchlist"], " | ".join(b["why"]), " | ".join(b["headlines"] + b["red_flags"])])
     with open(f"{outdir}/{date}-warnings.csv", "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["ticker", "neg_score", "drop", "close", "watchlist", "headlines", "sec_red_flags"])

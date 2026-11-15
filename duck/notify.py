@@ -29,17 +29,17 @@ def send(date, live, drops, warnings, stats):
         f"<tr><td><b>{e(d['ticker'])}</b></td><td>{d['score']}</td><td>{d['drop']:+.0%}</td>"
         f"<td>{e(BUCKET_LABEL[d['bucket']])}</td><td>{e(d.get('psych_label', ''))}</td></tr>" for d in drops[:8]) \
         or "<tr><td colspan=5>None today</td></tr>"
-    warns = "".join(f"<li><b>{e(w['ticker'])}</b>: {e((w['headlines'] + w['red_flags'] + [''])[0])}</li>"
+    warns = "".join(f"<li><b>{e(w['ticker'])}</b>: {e((w['why'] + [''])[0])}</li>"
                     for w in warnings[:5]) or "<li>None today</li>"
     s = stats["all"]
     hit = f"{s['hit_rate']:.0%}" if s["hit_rate"] is not None else "–"
     body = (f"<div style='font-family:Archivo,Helvetica,Arial,sans-serif;font-size:14px;color:#0B100F'>"
             f"<div style='font:600 12px Georgia,serif;letter-spacing:.3em'>DUCK CAPITAL</div>"
             f"<h2 style='font:400 24px Georgia,serif;margin:6px 0'>{e(date)}</h2>"
-            f"<p>{len(live)} live events · {len(drops)} rebound candidates · {len(warnings)} early warnings · "
+            f"<p>{len(live)} live events · {len(drops)} rebounds to watch · {len(warnings)} before the move · "
             f"paper hit rate {hit} on {s['n']} picks</p>"
             f"<b>Live events</b><ul>{evs}</ul>"
-            f"<b>Early warnings</b><ul>{warns}</ul>"
+            f"<b>Before the move</b><ul>{warns}</ul>"
             f"<b>Top rebound candidates</b><table cellpadding=4 style='border-collapse:collapse'>"
             f"<tr><th align=left>Stock</th><th>Score</th><th>Drop</th><th align=left>Kind</th>"
             f"<th align=left>Numbers</th></tr>{rows}</table>"
@@ -48,7 +48,7 @@ def send(date, live, drops, warnings, stats):
                if url else "")
             + "<p style='color:#888;font-size:12px'>Not investment advice.</p></div>")
     msg = MIMEText(body, "html")
-    msg["Subject"] = f"Duck Capital {date}: {len(live)} events, {len(drops)} rebounds, {len(warnings)} warnings"
+    msg["Subject"] = f"Duck Capital {date}: {len(live)} events, {len(drops)} rebounds, {len(warnings)} before the move"
     msg["From"], msg["To"] = user, to
     try:
         host, port = os.environ.get("SMTP_HOST", "smtp.gmail.com"), int(os.environ.get("SMTP_PORT", "465"))

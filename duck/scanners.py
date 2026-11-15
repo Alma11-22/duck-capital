@@ -48,11 +48,13 @@ def early_warning_scan(window, details, sec, cfg, negativity, about=None, log=pr
         if about:
             news = about(news, t, details.profile(t)["name"])
         neg, top = negativity(news)
+        from .classify import serious
+        big = serious(news)
         filings = sec.filings(t, days=cfg["news_days"] + 4)
         neg += 3 * len(filings["red_flags"])
         if neg >= cfg["early_warning_min_score"]:
             out.append({"ticker": t, "close": w["close"], "drop": drop, "neg_score": neg,
-                        "headlines": top, "red_flags": filings["red_flags"],
+                        "headlines": top, "serious": big, "red_flags": filings["red_flags"],
                         "on_watchlist": t in cfg["watchlist"]})
     out.sort(key=lambda x: -x["neg_score"])
     log(f"  early warning: {len(out)} alerts")

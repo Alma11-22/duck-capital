@@ -107,6 +107,9 @@ def main():
             d["score"] = max(0, min(100, d["score"] + c["adjust"]))
     drops.sort(key=lambda x: -x["score"])
 
+    before = build_before(warnings, live, store, cfg)
+    shown = [d for d in drops if d["score"] >= cfg["show_min_score"] and d["drop"] <= -cfg["show_min_drop"]]
+
     print("6/6 Paper portfolio + report...")
     paper = Paper(paper_path)
     added = paper.add(asof, [d for d in drops if d["score"] >= cfg["paper_buy_min_score"]], "rebound")
@@ -116,12 +119,58 @@ def main():
     paper.mark(store, asof)
     paper.save()
     stats = {"all": paper.stats(), "rebound": paper.stats("rebound"), "event_winner": paper.stats("event_winner")}
-    path = report.write(asof, live, drops, warnings, stats)
-    print(f"    {len(live)} live events, {len(drops)} rebound candidates, {len(warnings)} early warnings, "
+    path = report.write(asof, live, shown, before, stats, all_drops=drops, warnings=warnings)
+    print(f"    {len(live)} live events, {len(shown)} of {len(drops)} rebounds shown, {len(before)} before-the-move, "
           f"{added} new paper picks")
     if not args.demo:
-        notify.send(asof, live, drops, warnings, stats)
+        notify.send(asof, live, shown, before, stats)
     print(f"Done -> {path}")
+
+
+def build_before(warnings, live, store, cfg):
+    """Stocks where something real just happened but the price hasn't reacted much yet."""
+    d5 = cfg["event_confirm_days"]
+    items = {}
+
+    def add(t, close, drop, strength, why, direction, watch=False, heads=(), flags=()):
+        it = items.setdefault(t, {"ticker": t, "close": close, "drop": drop, "move": store.change(t, d5),
+                                  "strength": 0, "why": [], "directions": set(), "on_watchlist": False,
+                                  "headlines": [], "red_flags": []})
+        it["strength"] += strength
+        it["why"].append(why)
+        it["directions"].add(direction)
+        it["on_watchlist"] |= watch
+        it["headlines"] += list(heads)
+        it["red_flags"] += list(flags)
+
+    for w in warnings:
+        if w["serious"] or w["red_flags"]:
+            add(w["ticker"], w["close"], w["drop"], w["neg_score"] + 5 * len(w["red_flags"]),
+                "Serious company news" if w["serious"] else "SEC red-flag filing", "bad",
+                w["on_watchlist"], w["serious"][:2], w["red_flags"])
+        elif w["on_watchlist"]:
+            add(w["ticker"], w["close"], w["drop"], w["neg_score"], "Negative news on your watchlist", "bad",
+                True, w["headlines"][:2])
+    lim = cfg["before_max_move"]
+    for ev in live:
+        for t in ev.get("loser_tickers", []):
+            mv, px = store.change(t, d5), store.latest(t)
+            if mv is not None and px is not None and mv > -lim:
+                add(t, px, None, ev["score"], f"Usually hurt by {ev['label']}; only {mv:+.0%} so far", "bad",
+                    t in cfg["watchlist"])
+        for w in ev.get("winners", []):
+            if w["move"] is not None and w["move"] < lim and w["score"] >= 60:
+                add(w["ticker"], w["close"], None, ev["score"] + (w["score"] - 60) / 4,
+                    f"Usually helped by {ev['label']}; only {w['move']:+.0%} so far", "good",
+                    w["ticker"] in cfg["watchlist"])
+    out = sorted(items.values(), key=lambda x: -x["strength"])
+    keep = [x for x in out if x["on_watchlist"]]
+    keep += [x for x in out if not x["on_watchlist"]][: max(0, cfg["before_max_items"] - len(keep))]
+    for x in keep:
+        x["direction"] = "mixed" if len(x["directions"]) > 1 else next(iter(x["directions"]))
+        del x["directions"]
+    keep.sort(key=lambda x: (-int(x["on_watchlist"]), -x["strength"]))
+    return keep
 
 
 if __name__ == "__main__":
