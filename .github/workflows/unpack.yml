@@ -1,0 +1,24 @@
+# Unpacks an uploaded duck-capital.zip into the repo, replacing the old code.
+# To update the project later: upload a new duck-capital.zip to the top level.
+name: unpack-update
+on:
+  push:
+    paths: ["duck-capital.zip"]
+  workflow_dispatch: {}
+permissions:
+  contents: write
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          if [ ! -f duck-capital.zip ]; then echo "no zip"; exit 0; fi
+          git rm -r -q --ignore-unmatch rebound
+          unzip -o -q duck-capital.zip -x '.github/*'
+          git rm -q duck-capital.zip
+          git add -A
+          git config user.name "duck-bot"
+          git config user.email "duck-bot@users.noreply.github.com"
+          git commit -m "Unpack Duck Capital update" || echo "nothing to change"
+          git push
