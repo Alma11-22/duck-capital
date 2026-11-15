@@ -6,28 +6,35 @@ import os
 from .score import BUCKET_LABEL
 
 CSS = """
-body{font:15px/1.45 -apple-system,Segoe UI,Roboto,sans-serif;margin:0;background:#f7f7f5;color:#1d1d1b}
-main{max-width:880px;margin:0 auto;padding:20px}
-h1{font-size:24px;margin:0 0 4px} h2{font-size:17px;margin:30px 0 10px}
-.sub{color:#6b6b66;font-size:13px}
-.kpis{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
-.kpi{background:#fff;border:1px solid #e6e5e0;border-radius:10px;padding:10px 14px;min-width:110px;font-size:13px}
-.kpi b{display:block;font-size:20px}
-.card{background:#fff;border:1px solid #e6e5e0;border-radius:10px;padding:14px;margin:10px 0}
-.event{border-left:4px solid #e0a100}
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap');
+:root{--ink:#0B100F;--accent:#21ABC9;--accent-ink:#1A5A6E;--sky:#F3F5F4;--line:#E9EDEA;--muted:#5B6462;--bg:#FFFFFF}
+body{font:15px/1.5 Archivo,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;margin:0;background:var(--bg);color:var(--ink)}
+main{max-width:880px;margin:0 auto;padding:28px 20px}
+h1{font:400 34px/1.1 Fraunces,Georgia,serif;margin:0 0 6px;letter-spacing:-.01em}
+h2{font:400 22px/1.2 Fraunces,Georgia,serif;margin:36px 0 12px;padding-top:18px;border-top:1px solid var(--line)}
+.brand{font:600 13px Fraunces,Georgia,serif;letter-spacing:.32em;margin-bottom:14px}
+.sub{color:var(--muted);font-size:13px}
+.kpis{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+.kpi{background:var(--sky);border-radius:14px;padding:12px 16px;min-width:110px;font-size:12px;color:var(--muted)}
+.kpi b{display:block;font:400 26px Fraunces,Georgia,serif;color:var(--ink);margin-top:2px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+.event{border-left:4px solid var(--accent)}
 .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
-.t{font-weight:700;font-size:16px} .pill{font-weight:700;padding:2px 9px;border-radius:999px;font-size:13px}
-.hi{background:#dcf3e3;color:#145c2e} .mid{background:#fdf1d4;color:#7a5300} .lo{background:#f9dede;color:#8a1f1f}
-.gray{background:#ecebe6;color:#55554f}
+.t{font-weight:700;font-size:16px}
+.pill{font-weight:600;padding:3px 11px;border-radius:999px;font-size:13px}
+.hi{background:var(--accent);color:#0B100F} .mid{background:var(--sky);color:var(--accent-ink)} .lo{background:#FBE9E9;color:#B3261E}
+.gray{background:var(--sky);color:var(--muted)}
 ul{margin:6px 0 0 18px;padding:0} li{margin:2px 0}
-.meta{color:#6b6b66;font-size:13px;margin-top:6px}
-.thesis{background:#f4f3ef;border-radius:8px;padding:8px 10px;margin-top:8px;font-size:14px}
+b{font-weight:600}
+.meta{color:var(--muted);font-size:13px;margin-top:6px} .meta b{color:var(--ink)}
+.thesis{background:var(--sky);border-radius:10px;padding:10px 12px;margin-top:10px;font-size:14px}
 table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
-td,th{padding:6px 4px;border-bottom:1px solid #efeee9;text-align:left;vertical-align:top}
-th{color:#6b6b66;font-weight:600;font-size:12px}
-.meter{height:6px;background:#ecebe6;border-radius:3px;overflow:hidden;margin-top:4px;max-width:180px}
-.meter i{display:block;height:100%;background:#e0a100}
-.small{font-size:12px;color:#6b6b66}
+td,th{padding:7px 4px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:12px}
+.meter{height:6px;background:var(--sky);border-radius:3px;overflow:hidden;margin-top:5px;max-width:200px}
+.meter i{display:block;height:100%;background:var(--accent)}
+.small{font-size:12px;color:var(--muted)}
+a{color:var(--accent-ink)}
 """
 
 
@@ -60,8 +67,8 @@ def write(date, live, drops, warnings, stats, outdir="reports"):
     e = html.escape
     p = [f"<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>"
          f"<title>Duck Capital – {e(date)}</title><style>{CSS}</style><main>",
-         f"<h1>🦆 Duck Capital</h1><div class=sub>Event-driven daily scan · prices as of close {e(date)} · "
-         f"not investment advice</div>"]
+         f"<div class=brand>DUCK CAPITAL</div><h1>Today's events, winners and overreactions.</h1>"
+         f"<div class=sub>Daily scan · prices as of close {e(date)} · not investment advice</div>"]
     hit, avg, n = _stat(stats["all"])
     p.append("<div class=kpis>"
              f"<div class=kpi>Live events<b>{len(live)}</b></div>"

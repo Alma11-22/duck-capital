@@ -52,17 +52,21 @@ def psych_score(m, surprises, move, extra_bad=()):
     bad = bad + list(extra_bad)
     pts -= len(extra_bad)
     size = min(abs(move) / 0.30, 1.0) if move is not None else 0.5  # how big the move is (0..1)
+    # Stricter: one good number is not enough. Net health must be +2 or better before a drop
+    # counts as psychology, and each point is worth less than before.
+    eff = pts - 1 if pts > 0 else pts
     if move is not None and move < 0:   # a drop: healthy numbers => psychology
-        s = 50 + pts * 8 * (0.5 + size)
+        s = 50 + eff * 6 * (0.5 + size)
     else:                               # a rise: weak numbers => hype (psychology)
-        s = 50 - pts * 8 * (0.5 + size)
+        s = 50 - eff * 6 * (0.5 + size)
     s = max(0, min(100, round(s)))
-    if s >= 65:
+    if s >= 68 and len(good) >= 3 and len(bad) <= 1:
         label = "Mostly psychology" if (move or 0) < 0 else "Mostly hype"
     elif s <= 35:
         label = "Mostly fundamentals"
     else:
         label = "Mixed"
+        s = min(s, 67)
     data_points = sum(v is not None for v in (m.get("revenue_growth"), m.get("eps_growth"),
                                               m.get("margin_ttm"), m.get("debt_to_equity"))) + bool(surprises)
     if data_points < 2:

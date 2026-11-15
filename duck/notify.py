@@ -33,8 +33,9 @@ def send(date, live, drops, warnings, stats):
                     for w in warnings[:5]) or "<li>None today</li>"
     s = stats["all"]
     hit = f"{s['hit_rate']:.0%}" if s["hit_rate"] is not None else "–"
-    body = (f"<div style='font-family:sans-serif;font-size:14px'>"
-            f"<h3 style='margin:0'>🦆 Duck Capital – {e(date)}</h3>"
+    body = (f"<div style='font-family:Archivo,Helvetica,Arial,sans-serif;font-size:14px;color:#0B100F'>"
+            f"<div style='font:600 12px Georgia,serif;letter-spacing:.3em'>DUCK CAPITAL</div>"
+            f"<h2 style='font:400 24px Georgia,serif;margin:6px 0'>{e(date)}</h2>"
             f"<p>{len(live)} live events · {len(drops)} rebound candidates · {len(warnings)} early warnings · "
             f"paper hit rate {hit} on {s['n']} picks</p>"
             f"<b>Live events</b><ul>{evs}</ul>"
@@ -42,7 +43,9 @@ def send(date, live, drops, warnings, stats):
             f"<b>Top rebound candidates</b><table cellpadding=4 style='border-collapse:collapse'>"
             f"<tr><th align=left>Stock</th><th>Score</th><th>Drop</th><th align=left>Kind</th>"
             f"<th align=left>Numbers</th></tr>{rows}</table>"
-            + (f"<p><a href='{e(url)}'>Open the full report</a></p>" if url else "")
+            + (f"<p><a href='{e(url)}' style='display:inline-block;background:#21ABC9;color:#0B100F;"
+               f"padding:10px 18px;border-radius:999px;text-decoration:none;font-weight:600'>Open the full report</a></p>"
+               if url else "")
             + "<p style='color:#888;font-size:12px'>Not investment advice.</p></div>")
     msg = MIMEText(body, "html")
     msg["Subject"] = f"Duck Capital {date}: {len(live)} events, {len(drops)} rebounds, {len(warnings)} warnings"

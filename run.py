@@ -54,7 +54,7 @@ def main():
         f_evt = pool.submit(lambda: events.detect(details.market_news(cfg["event_news_days"]),
                                                   playbooks, store, cfg))
         f_drop = pool.submit(drop_scan, window, details, cfg)
-        f_warn = pool.submit(early_warning_scan, window, details, sec, cfg, classify.negativity)
+        f_warn = pool.submit(early_warning_scan, window, details, sec, cfg, classify.negativity, classify.about)
         live, drops, warnings = f_evt.result(), f_drop.result(), f_warn.result()
 
     print("3/6 Event winners...")
@@ -65,7 +65,7 @@ def main():
         for w in ev["winners"]:
             p = psych_score(details.metrics(w["ticker"]), details.earnings_surprises(w["ticker"]), w["move"])
             w.update(p)
-            if p["psych"] >= 65 and (w["move"] or 0) > 0.05:
+            if p["psych_label"] == "Mostly hype" and (w["move"] or 0) > 0.05:
                 w["score"] = max(0, w["score"] - 10); w["reasons"].append("Rise isn't backed by the numbers (hype risk)")
             elif p["psych"] <= 35:
                 w["score"] = min(100, w["score"] + 5); w["reasons"].append("The numbers back the move")
@@ -77,7 +77,8 @@ def main():
     lib = Library()
     for d in drops:
         t = d["ticker"]
-        news = details.news(t, cfg["lookback_days"])
+        raw = details.news(t, cfg["lookback_days"])
+        news = classify.about(raw, t, d["name"]) or raw[:10]
         d["bucket"], d["keywords"] = classify.classify(news)
         d["headlines"] = [x["headline"] for x in news[:5]]
         d["_news"] = news
@@ -90,7 +91,7 @@ def main():
         p = psych_score(d["metrics"], details.earnings_surprises(t), d["drop"],
                         extra_bad=["SEC red-flag filing"] if d["red_flags"] else ())
         d.update(p)
-        if p["psych"] >= 65:
+        if p["psych_label"] == "Mostly psychology":
             d["score"] = min(100, d["score"] + 8); d["reasons"].append("Numbers still healthy: drop looks like psychology")
         elif p["psych"] <= 35:
             d["score"] = max(0, d["score"] - 8); d["reasons"].append("The numbers explain the drop")

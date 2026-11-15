@@ -16,7 +16,7 @@ pandemic:
 
 war:
   label: War / geopolitical conflict
-  keywords: [invasion, invades, war, missile strike, airstrike, troops, military escalation, nato, ceasefire collapses, conflict escalates]
+  keywords: [invasion, invades, missile strike, missiles, airstrike, air strike, drone attack, troops, military escalation, nato, ceasefire collapses, conflict escalates, declares war, war with, war in]
   past: Russia invades Ukraine, Feb 2022
   losers: [DAL, UAL, CCL, BKNG, MAR]
   winners:
@@ -26,7 +26,7 @@ war:
 
 tariffs:
   label: Tariffs / trade war
-  keywords: [tariff, tariffs, trade war, retaliatory, import duties, export controls, de minimis, trade deal collapses]
+  keywords: [tariff, tariffs, trade war, retaliatory, import duties, export controls, export curbs, chip curbs, de minimis, trade deal collapses, trade talks stall, duties on]
   past: Liberation Day tariffs, Apr 2025
   losers: [AAPL, NKE, GM, F, STLA, TGT, BBY, DECK, VFC, AMZN, TSM]
   winners:
@@ -36,7 +36,7 @@ tariffs:
 
 rate_shock:
   label: Rate shock / inflation scare
-  keywords: [rate hike, hawkish, inflation surges, hotter-than-expected, cpi jumps, bond yields soar, treasury selloff, fed signals more hikes]
+  keywords: [rate hike, hawkish, inflation surges, inflation jumps, hotter-than-expected, hotter than expected, cpi jumps, cpi rises, yields soar, yields jump, yields surge, yields climb, yields spike, yield hits, yields hit, 10-year yield, 30-year yield, treasury selloff, bond selloff, bond rout, fed signals, fewer rate cuts, no rate cut, rate cut hopes fade, sticky inflation]
   past: Fed hiking cycle, 2022
   losers: [SHOP, ROKU, DHI, LEN, O, TTD, SNOW]
   winners:
@@ -46,7 +46,7 @@ rate_shock:
 
 bank_crisis:
   label: Bank scare / credit crisis
-  keywords: [bank run, deposit outflows, bank failure, seized by regulators, fdic, liquidity crisis, bank collapse, contagion]
+  keywords: [bank run, deposit outflows, bank failure, seized by regulators, fdic, liquidity crisis, bank collapse, contagion, credit crunch, private credit, loan losses, bank stocks tumble, regional banks]
   past: Silicon Valley Bank collapse, Mar 2023
   losers: [ZION, WAL, KEY, CMA, FLG, SCHW]
   winners:
@@ -66,7 +66,7 @@ ai_breakthrough:
 
 energy_shock:
   label: Oil / energy shock
-  keywords: [oil prices surge, crude spikes, opec cut, supply disruption, strait of hormuz, refinery outage, energy crisis, gas prices soar]
+  keywords: [oil prices surge, oil surges, oil jumps, oil spikes, crude spikes, crude surges, brent tops, opec cut, supply disruption, strait of hormuz, refinery outage, energy crisis, gas prices soar, natural gas surges]
   past: Oil spike, Mar–Jun 2022
   losers: [DAL, UAL, AAL, FDX, UPS, DOW]
   winners:
@@ -86,10 +86,30 @@ disaster:
 
 cyber:
   label: Major cyberattack / outage
-  keywords: [cyberattack, ransomware, data breach, hackers, global outage, cyber attack]
+  keywords: [cyberattack, ransomware, data breach, hackers, global outage, cyber attack, hacked, systems outage]
   past: CrowdStrike outage Jul 2024; SolarWinds hack Dec 2020
   losers: []
   winners:
     direct: [CRWD, PANW, ZS, FTNT, S]
     second_order: [OKTA, NET, CYBR]
   sell_when: The news cycle passes - usually weeks, not months.
+
+ai_unwind:
+  label: AI trade unwind / chip selloff
+  keywords: [chip stocks fall, chip stocks slide, chip stocks tumble, chipmakers slide, chipmakers fall, semiconductor selloff, semiconductor stocks, ai bubble, ai trade, ai stocks fall, ai stocks slide, ai spending fears, capex fears, nvidia falls, nvidia sinks, nvidia slides, bearish chip, data center delays, tech selloff, nasdaq slides, nasdaq falls]
+  past: DeepSeek shock Jan 2025; chip selloff Jul–Aug 2024
+  losers: [NVDA, AMD, AVGO, MU, SMCI, VRT, ANET, TSM, CRWV, NBIS]
+  winners:
+    direct: [WMT, COST, PG, KO, JNJ, BRK.B]
+    second_order: [UNH, MCD, PEP, DUK, SO, GLD]
+  sell_when: Big tech reaffirms AI spending, or chip stocks put in two weeks of higher lows.
+
+crypto_crash:
+  label: Crypto crash
+  keywords: [bitcoin falls, bitcoin slides, bitcoin tumbles, bitcoin plunges, bitcoin crashes, bitcoin drops, bitcoin sinks, crypto selloff, crypto crash, crypto stocks, ether falls, liquidations, bitcoin below]
+  past: FTX collapse Nov 2022; crypto winter 2022
+  losers: [COIN, MSTR, HOOD, MARA, RIOT, CLSK, IBIT]
+  winners:
+    direct: [GLD, NEM, AEM]
+    second_order: [CME, ICE, V, MA]
+  sell_when: Bitcoin reclaims its 50-day average and fund outflows stop.

@@ -31,7 +31,7 @@ def drop_scan(window, details, cfg, log=print):
     return out
 
 
-def early_warning_scan(window, details, sec, cfg, negativity, log=print):
+def early_warning_scan(window, details, sec, cfg, negativity, about=None, log=print):
     """Watchlist + most-traded names: alert on bad news before a big drop."""
     liquid = sorted((t for t in window if t.isalpha()), key=lambda t: -window[t]["dollar_volume"])
     universe = list(dict.fromkeys(cfg["watchlist"] + liquid[: cfg["early_warning_top_n"]]))
@@ -45,6 +45,8 @@ def early_warning_scan(window, details, sec, cfg, negativity, log=print):
         if drop <= -cfg["early_warning_max_drop"]:
             continue  # already dropped: the drop scanner covers it
         news = details.news(t, cfg["news_days"])
+        if about:
+            news = about(news, t, details.profile(t)["name"])
         neg, top = negativity(news)
         filings = sec.filings(t, days=cfg["news_days"] + 4)
         neg += 3 * len(filings["red_flags"])

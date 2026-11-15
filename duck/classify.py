@@ -10,9 +10,10 @@ BUCKETS = {
                   "controversy", "allegation", "harassment", "shooting", "spy", "fined", "settlement"],
     "ai_fear": ["ai disruption", "disrupt", "chatgpt", "openai", "deepseek", "ai agent", "generative ai",
                 "replaced by ai", "ai threat", "ai capex", "ai spending", "anthropic", "gemini"],
-    "macro_policy": ["tariff", "trade war", "export control", "sanction", "fda", "regulator", "regulation",
-                     "antitrust", "doj", "ftc", "medicare", "medicaid", "tax", "interest rate", "fed ",
-                     "election", "policy", "ban"],
+    "macro_policy": ["tariff", "trade war", "export control", "export ban", "sanction", "fda reject",
+                     "fda approval", "complete response letter", "antitrust", "doj sues", "ftc sues",
+                     "medicare", "medicaid", "drug pricing", "rate hike", "rate cut", "federal reserve",
+                     "treasury yields", "bond yields", "executive order", "government shutdown"],
     "business_miss": ["guidance", "misses", "miss ", "cuts outlook", "lowers outlook", "sales decline",
                       "weak demand", "slowdown", "margin", "layoffs", "writedown", "impairment",
                       "downgrade", "competition", "loses share", "subscriber"],
@@ -38,18 +39,70 @@ def _text(items):
 
 
 def classify(news):
-    """Return (bucket, matched_keywords). Defaults to business_miss."""
+    """Return (bucket, matched_keywords).
+
+    A bucket needs 2+ distinct keyword hits to win; ties go to business_miss
+    (the most conservative bucket). Otherwise defaults to business_miss.
+    """
     text = _text(news)
-    best, hits_best = "business_miss", []
+    scored = []
     for bucket, words in BUCKETS.items():
-        hits = [w for w in words if w in text]
-        if len(hits) > len(hits_best):
-            best, hits_best = bucket, hits
-    return best, hits_best
+        hits = [w for w in words if re.search(r"\b" + re.escape(w.strip()), text)]
+        scored.append((len(hits), bucket == "business_miss", bucket, hits))
+    scored.sort(reverse=True)
+    n, _, bucket, hits = scored[0]
+    if n < 2 and bucket != "business_miss":
+        return "business_miss", hits
+    return bucket, hits
+
+
+GENERIC = {"bank", "first", "american", "general", "united", "international", "national", "global",
+           "new", "the", "royal", "energy", "capital", "financial", "southern", "western", "eastern"}
+SOURCE_VERBS = (r"analyst|strategist|economist|research|securities|says|said|warn|see|expect|cut|slash|"
+                r"raise|lift|trim|downgrade|upgrade|initiate|reiterate|predict|forecast|note|top pick|price target")
+
+
+def _names(ticker, name):
+    n = re.sub(SUFFIX, "", (name or "").lower()).replace(",", " ")
+    n = re.sub(r"\s+", " ", n).strip()
+    out = [ticker.lower()]
+    if n:
+        out.append(n)
+        w = n.split()[0]
+        if len(w) >= 4 and w not in GENERIC:
+            out.append(w)
+    alias = {"BAC": "bofa", "GS": "goldman", "MS": "morgan stanley", "JPM": "jpmorgan", "C": "citi",
+             "WFC": "wells fargo", "GOOGL": "google", "GOOG": "google", "META": "facebook"}.get(ticker)
+    if alias:
+        out.append(alias)
+    return sorted(set(out), key=len, reverse=True)
+
+
+def about(news, ticker, name):
+    """Keep only headlines actually ABOUT this company, not ones where it is just the source
+    (e.g. 'Bank of America analysts cut Nike' is not news about Bank of America)."""
+    alt = "|".join(re.escape(x) for x in _names(ticker, name))
+    hit = re.compile(r"\b(" + alt + r")\b", re.I)
+    src = re.compile(r"\b(" + alt + r")('s)?\s+(global\s+)?(" + SOURCE_VERBS + r")|"
+                     r"\b(according to|by|from|at|says|said|warns)\s+(" + alt + r")\b|"
+                     r",\s*(" + alt + r")\s+(" + SOURCE_VERBS + r")", re.I)
+    out = []
+    for n in news:
+        h = n.get("headline", "")
+        if not hit.search(h):
+            continue
+        if src.search(h) and len(hit.findall(h)) == 1:
+            continue  # company only appears as the source of the story
+        out.append(n)
+    return out
+
+
+SUFFIX = r"\b(inc|incorporated|corp|corporation|co|company|plc|ltd|limited|holdings?|group|n\.?v|s\.?a|ag|se|class [a-c]|the)\b\.?"
 
 
 def negativity(news):
-    """Simple headline score: + for negative words, - for positive ones. Returns (score, top headlines)."""
+    """Simple headline score: + for negative words, - for positive ones. Returns (score, top headlines).
+    Each headline counts at most 4, so a flood of stories can't run the score up on its own."""
     score, flagged = 0, []
     for n in news:
         h = (n.get("headline", "") + " " + n.get("summary", "")).lower()
@@ -57,6 +110,6 @@ def negativity(news):
         s -= sum(1 for k in POSITIVE if k in h)
         if s > 0:
             flagged.append((s, n.get("headline", "")))
-        score += max(s, 0)
+        score += min(max(s, 0), 4)
     flagged.sort(reverse=True)
     return score, [h for _, h in flagged[:3]]

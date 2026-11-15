@@ -31,14 +31,18 @@ def detect(news, playbooks, store, cfg, log=print):
             h = (n.get("headline", "") + " " + n.get("summary", "")).lower()
             hits = _hits(h, pb["keywords"])
             if hits:
-                score += len(hits)
+                score += 1 + 0.5 * (len(hits) - 1)  # one point per headline, bonus for extra hits
                 quotes.append(n.get("headline", ""))
-        if score < cfg["event_min_score"]:
+        if score < cfg["event_min_score"] / 2:
             continue
         d = cfg["event_confirm_days"]
         lose_mv, _ = _basket_move(store, pb.get("losers", []), d)
         win_mv, _ = _basket_move(store, pb["winners"]["direct"] + pb["winners"]["second_order"], d)
         confirmed = (lose_mv is not None and win_mv is not None and win_mv - lose_mv > 0.03)
+        # Live if headlines are loud, or moderately loud AND the market agrees.
+        if score < cfg["event_min_score"] and not confirmed:
+            continue
+        score = round(score, 1)
         events.append({"key": key, "label": pb["label"], "score": score, "headlines": quotes[:4],
                        "losers_move": lose_mv, "winners_move": win_mv, "confirmed": confirmed,
                        "past": pb.get("past", ""), "sell_when": pb["sell_when"]})
