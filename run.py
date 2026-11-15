@@ -129,7 +129,17 @@ def main():
 
     print("6/6 Paper portfolio + report...")
     paper = Paper(paper_path)
-    added = paper.add(asof, [d for d in drops if d["score"] >= cfg["paper_buy_min_score"]], "rebound")
+    picks, per_sector = [], {}
+    for d in drops:  # already sorted best first
+        if d["score"] < cfg["paper_buy_min_score"]:
+            continue
+        if d["bucket"] in ("sector_panic", "sector_downturn", "crypto_selloff") and d.get("sector_info"):
+            k = d["sector_info"]["sector"]
+            per_sector[k] = per_sector.get(k, 0) + 1
+            if per_sector[k] > cfg["paper_max_per_sector"]:
+                continue  # one sector selloff is one bet: cap it
+        picks.append(d)
+    added = paper.add(asof, picks, "rebound")
     for ev in live:
         added += paper.add(asof, [w for w in ev["winners"] if w["score"] >= cfg["paper_winner_min_score"]],
                            "event_winner")
@@ -179,11 +189,11 @@ def build_before(warnings, live, store, cfg):
     for ev in live:
         for t in ev.get("loser_tickers", []):
             mv, px = store.change(t, d5), store.latest(t)
-            if mv is not None and px is not None and mv > -lim:
+            if mv is not None and px is not None and abs(mv) < lim:
                 add(t, px, None, ev["score"], f"Usually hurt by {ev['label']}; only {mv:+.0%} so far", "bad",
                     t in cfg["watchlist"])
         for w in ev.get("winners", []):
-            if w["move"] is not None and w["move"] < lim and w["score"] >= 60:
+            if w["move"] is not None and abs(w["move"]) < lim and w["score"] >= 60:
                 add(w["ticker"], w["close"], None, ev["score"] + (w["score"] - 60) / 4,
                     f"Usually helped by {ev['label']}; only {w['move']:+.0%} so far", "good",
                     w["ticker"] in cfg["watchlist"])

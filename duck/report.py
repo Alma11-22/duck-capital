@@ -103,8 +103,8 @@ pull it down.</p>
 <p><b>Psychology meter:</b> is the drop about mood or numbers? High means the business still looks fine and the price
 fell anyway.</p>
 <p><b>Sector selloff:</b> the stock fell together with its whole sector, with no bad news of its own. A sector
-<i>panic</i> (numbers still healthy) has recovered about 80% of the time; a sector <i>downturn</i> (numbers weakening)
-about 30%; crypto about 40%.</p>
+<i>panic</i> (numbers still healthy) has recovered about 70% of the time; a sector <i>downturn</i> (numbers weakening)
+about 35%; crypto about 40%. Small samples are weighted toward the 40% average.</p>
 <p style=margin-bottom:0><b>Before the move:</b> news that matters, price hasn't reacted yet. Not a buy signal on its
 own; it's your head start.</p></div>"""
 
@@ -190,7 +190,10 @@ def write(date, live, drops, before, stats, all_drops=None, warnings=None, outdi
         losers = ", ".join(sorted(ev.get("loser_tickers", []))) or "–"
         p.append(f"<div class='card event'><div class=top><span class=t>{e(ev['label'])}</span>{conf}</div>"
                  f"<div class=meta>Like: {e(ev['past'])} · playbook losers {_pct(ev['losers_move'])}, "
-                 f"winners {_pct(ev['winners_move'])} over 5 days</div><ul>{heads}</ul>"
+                 f"winners {_pct(ev['winners_move'])} over 5 days</div>"
+                 + (f"<div class=meta><b>Spotted in prices:</b> the stocks this kind of event hurts are "
+                    f"{_pct(ev['month_gap'])} vs. the market over the past month</div>" if ev.get("price_seen") else "")
+                 + f"<ul>{heads}</ul>"
                  f"<b style='display:block;margin-top:10px'>Who benefits</b>"
                  f"<table><tr><th>Stock</th><th>Score</th><th>5-day</th><th>Numbers</th><th>Why</th></tr>{wrows}</table>"
                  f"<div class=meta><b>Who gets hurt:</b> {e(losers)}</div>"
@@ -204,7 +207,7 @@ def write(date, live, drops, before, stats, all_drops=None, warnings=None, outdi
         ds = sorted(ds, key=lambda x: -x["score"])
         sd = ds[0]["sector_info"]["sector_drop"]
         kinds = {b: sum(1 for d in ds if d["bucket"] == b) for b in SECT}
-        kind = ("Crypto selloff: past cases recovered 40% of the time" if kinds["crypto_selloff"] else
+        kind = ("Crypto selloff: past cases recovered about 40% of the time" if kinds["crypto_selloff"] else
                 f"{kinds['sector_panic']} look like panic (numbers still healthy), "
                 f"{kinds['sector_downturn']} like a real downturn (numbers weakening)")
         rows = "".join(

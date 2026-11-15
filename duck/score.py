@@ -14,6 +14,7 @@ BUCKET_LABEL = {
     "sector_panic": "Sector selloff (panic)",
     "sector_downturn": "Sector downturn",
     "crypto_selloff": "Crypto selloff",
+    "unclear": "Reason unclear",
 }
 
 EXIT_TRIGGERS = {
@@ -25,6 +26,7 @@ EXIT_TRIGGERS = {
     "sector_panic": "The sector's own numbers start falling (orders, guidance), turning a panic into a downturn.",
     "sector_downturn": "Another quarter of falling sector demand or margins, with no sign of a bottom.",
     "crypto_selloff": "Bitcoin keeps making lower lows and crypto fund outflows continue.",
+    "unclear": "A clear bad-news reason emerges (guidance cut, probe, lost customer) - then re-check.",
 }
 
 
@@ -36,11 +38,14 @@ class Library:
             c["vs_before"] = float(c["vs_before"])
             c["recovered"] = int(c["recovered"])
 
-    def base_rate(self, bucket):
+    def base_rate(self, bucket, k=10):
+        """Recovery rate for this kind of selloff, pulled toward the library-wide average in
+        proportion to how few cases it has (k = weight of the average, in cases)."""
+        overall = sum(c["recovered"] for c in self.cases) / len(self.cases)
         cs = [c for c in self.cases if c["bucket"] == bucket]
         if not cs:
-            return 0.4, 0
-        return sum(c["recovered"] for c in cs) / len(cs), len(cs)
+            return overall, len(self.cases)
+        return (sum(c["recovered"] for c in cs) + k * overall) / (len(cs) + k), len(cs)
 
     def analogs(self, bucket, drop, n=3):
         """Closest past cases: same kind of news, most similar drop size."""
@@ -54,7 +59,11 @@ def score(stock, lib, cfg):
     reasons = []
     rate, n = lib.base_rate(stock["bucket"])
     s = 20 + rate * 60  # 20..80 from the base rate
-    reasons.append(f"{BUCKET_LABEL[stock['bucket']]} selloffs recovered {rate:.0%} of the time ({n} past cases)")
+    if stock["bucket"] == "unclear":
+        reasons.append(f"Reason unclear: using the average for all past selloffs ({rate:.0%} recovered, {n} cases)")
+    else:
+        reasons.append(f"{BUCKET_LABEL[stock['bucket']]} selloffs: {rate:.0%} recovery odds "
+                       f"({n} past cases, adjusted toward the average)")
 
     drop = -stock["drop"]
     if drop >= 0.30:

@@ -33,19 +33,25 @@ def detect(news, playbooks, store, cfg, log=print):
             if hits:
                 score += 1 + 0.5 * (len(hits) - 1)  # one point per headline, bonus for extra hits
                 quotes.append(n.get("headline", ""))
-        if score < cfg["event_min_score"] / 2:
+        # Also spot events from prices alone: the playbook's "hurt" stocks down 8%+ vs the market
+        # over a month (the free news feed only keeps the latest headlines).
+        lm, nl = _basket_move(store, pb.get("losers", []), 21)
+        spy = store.change("SPY", 21)
+        price_seen = (lm is not None and spy is not None and nl >= 3 and lm - spy <= -cfg["event_price_gap"])
+        if score < cfg["event_min_score"] / 2 and not price_seen:
             continue
         d = cfg["event_confirm_days"]
         lose_mv, _ = _basket_move(store, pb.get("losers", []), d)
         win_mv, _ = _basket_move(store, pb["winners"]["direct"] + pb["winners"]["second_order"], d)
         confirmed = (lose_mv is not None and win_mv is not None and win_mv - lose_mv > 0.03)
         # Live if headlines are loud, or moderately loud AND the market agrees.
-        if score < cfg["event_min_score"] and not confirmed:
+        if score < cfg["event_min_score"] and not confirmed and not price_seen:
             continue
         score = round(score, 1)
         events.append({"key": key, "label": pb["label"], "score": score, "headlines": quotes[:4],
                        "losers_move": lose_mv, "winners_move": win_mv, "confirmed": confirmed,
-                       "past": pb.get("past", ""), "sell_when": pb["sell_when"]})
+                       "past": pb.get("past", ""), "sell_when": pb["sell_when"],
+                       "price_seen": price_seen, "month_gap": (lm - spy) if price_seen else None})
     events.sort(key=lambda e: (-int(e["confirmed"]), -e["score"]))
     log(f"  event radar: {len(events)} live event(s)" +
         (": " + ", ".join(e["label"] for e in events) if events else ""))

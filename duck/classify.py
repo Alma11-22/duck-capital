@@ -41,8 +41,8 @@ def _text(items):
 def classify(news):
     """Return (bucket, matched_keywords).
 
-    A bucket needs 2+ distinct keyword hits to win; ties go to business_miss
-    (the most conservative bucket). Otherwise defaults to business_miss.
+    A bucket needs 2+ distinct keyword hits to win; ties go to business_miss.
+    With fewer hits the reason is 'unclear' (scored on the library-wide average).
     """
     text = _text(news)
     scored = []
@@ -51,8 +51,8 @@ def classify(news):
         scored.append((len(hits), bucket == "business_miss", bucket, hits))
     scored.sort(reverse=True)
     n, _, bucket, hits = scored[0]
-    if n < 2 and bucket != "business_miss":
-        return "business_miss", hits
+    if n < 2:
+        return "unclear", hits
     return bucket, hits
 
 
