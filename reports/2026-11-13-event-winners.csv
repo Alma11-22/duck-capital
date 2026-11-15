@@ -15,3 +15,22 @@ War / geopolitical conflict,LNG,second_order,75,0.111,55,Mixed,308.75,"Second-or
 War / geopolitical conflict,PANW,second_order,75,0.027,50,Mixed,322.24,"Second-order beneficiary (less obvious, often less crowded) | Hasn't moved yet: early | Market confirms the event (losers down, winners up) | Revenue growing"
 War / geopolitical conflict,NEM,second_order,65,-0.064,67,Mixed,113.14,"Second-order beneficiary (less obvious, often less crowded) | Down -6%: market not buying it yet | Market confirms the event (losers down, winners up) | Revenue growing"
 War / geopolitical conflict,AEM,second_order,65,-0.068,59,Mixed,178.45,"Second-order beneficiary (less obvious, often less crowded) | Down -7%: market not buying it yet | Market confirms the event (losers down, winners up) | Revenue growing"
+AI trade unwind / chip selloff,COST,direct,75,0.05,42,Mixed,1106.21,Benefits directly from this kind of event | Up 5%: market starting to agree | Revenue growing
+AI trade unwind / chip selloff,KO,direct,75,0.037,43,Mixed,99.25,Benefits directly from this kind of event | Up 4%: market starting to agree | Revenue growing
+AI trade unwind / chip selloff,JNJ,direct,75,0.035,50,Mixed,285.75,Benefits directly from this kind of event | Up 3%: market starting to agree | Revenue growing
+AI trade unwind / chip selloff,BRK.B,direct,75,0.039,42,Mixed,592.94,Benefits directly from this kind of event | Up 4%: market starting to agree | Revenue growing
+AI trade unwind / chip selloff,WMT,direct,70,0.02,40,Mixed,128.09,Benefits directly from this kind of event | Hasn't moved yet: early | Revenue growing
+AI trade unwind / chip selloff,PG,direct,70,0.027,50,Mixed,169.8,Benefits directly from this kind of event | Hasn't moved yet: early | Revenue growing
+AI trade unwind / chip selloff,UNH,second_order,70,0.034,50,Mixed,407.46,"Second-order beneficiary (less obvious, often less crowded) | Up 3%: market starting to agree | Revenue growing"
+AI trade unwind / chip selloff,DUK,second_order,65,0.011,44,Mixed,129.16,"Second-order beneficiary (less obvious, often less crowded) | Hasn't moved yet: early | Revenue growing"
+AI trade unwind / chip selloff,SO,second_order,65,0.014,43,Mixed,93.59,"Second-order beneficiary (less obvious, often less crowded) | Hasn't moved yet: early | Revenue growing"
+AI trade unwind / chip selloff,MCD,second_order,60,-0.016,57,Mixed,271.97,"Second-order beneficiary (less obvious, often less crowded) | Hasn't moved yet: early | Revenue growing | High debt"
+AI trade unwind / chip selloff,PEP,second_order,60,0.029,46,Mixed,145.44,"Second-order beneficiary (less obvious, often less crowded) | Hasn't moved yet: early | Revenue growing | High debt"
+AI trade unwind / chip selloff,GLD,second_order,50,-0.046,50,Not enough data,355.45,"Second-order beneficiary (less obvious, often less crowded) | Down -5%: market not buying it yet"
+Crypto crash,CME,second_order,70,0.039,46,Mixed,317.97,"Second-order beneficiary (less obvious, often less crowded) | Up 4%: market starting to agree | Revenue growing"
+Crypto crash,ICE,second_order,70,0.036,39,Mixed,178.51,"Second-order beneficiary (less obvious, often less crowded) | Up 4%: market starting to agree | Revenue growing"
+Crypto crash,V,second_order,65,0.007,47,Mixed,425.76,"Second-order beneficiary (less obvious, often less crowded) | Hasn't moved yet: early | Revenue growing"
+Crypto crash,NEM,direct,60,-0.064,67,Mixed,113.14,Benefits directly from this kind of event | Down -6%: market not buying it yet | Revenue growing
+Crypto crash,AEM,direct,60,-0.068,59,Mixed,178.45,Benefits directly from this kind of event | Down -7%: market not buying it yet | Revenue growing
+Crypto crash,MA,second_order,60,0.013,47,Mixed,661.19,"Second-order beneficiary (less obvious, often less crowded) | Hasn't moved yet: early | Revenue growing | High debt"
+Crypto crash,GLD,direct,55,-0.046,50,Not enough data,355.45,Benefits directly from this kind of event | Down -5%: market not buying it yet
