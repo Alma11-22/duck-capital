@@ -1,4 +1,4 @@
-# Runs Rebound AI every weekday morning on GitHub's servers (free), publishes the
+# Runs Duck Capital every weekday morning on GitHub's servers (free), publishes the
 # report as a web page (GitHub Pages) and, if set up, emails a summary.
 # Keys go under Settings → Secrets and variables → Actions.
 name: daily-scan
@@ -43,8 +43,8 @@ jobs:
         run: python run.py
       - name: Save history back to the repo
         run: |
-          git config user.name "rebound-bot"
-          git config user.email "rebound-bot@users.noreply.github.com"
+          git config user.name "duck-bot"
+          git config user.email "duck-bot@users.noreply.github.com"
           git add data/prices.db data/paper_portfolio.csv reports/
           git commit -m "Daily scan $(date -u +%F)" || echo "nothing to commit"
           git push
