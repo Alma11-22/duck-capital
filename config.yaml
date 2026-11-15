@@ -1,0 +1,35 @@
+# Rebound AI settings. Edit freely.
+
+# --- Drop scanner ---
+drop_threshold: 0.10        # flag stocks down at least 10%...
+lookback_days: 30           # ...from their highest close in this many calendar days
+min_price: 5.0              # skip penny stocks
+min_dollar_volume: 5000000  # skip illiquid names ($ traded per day)
+min_market_cap_musd: 2000   # $2B+ only (checked for candidates only)
+max_candidates: 150         # cap per day so free API limits hold
+
+# --- Early-warning scanner (bad news BEFORE the drop) ---
+watchlist:                  # always checked every run
+  - NVDA
+  - AAPL
+  - MSFT
+  - GOOGL
+  - AMZN
+  - META
+  - TSLA
+  - LLY
+  - UNH
+  - NVO
+early_warning_top_n: 100    # also check the N most-traded stocks
+news_days: 3                # how far back to read news
+early_warning_min_score: 3  # negative-news score needed to alert
+early_warning_max_drop: 0.10 # only alert if the stock hasn't already dropped this much
+
+# --- Scoring / paper portfolio ---
+paper_buy_min_score: 65     # paper-buy anything scoring at least this
+tranches: [0.0, -0.10, -0.20]  # staged buys: now, 10% lower, 20% lower
+
+# --- Optional Claude judgment layer (needs ANTHROPIC_API_KEY) ---
+use_claude: true
+claude_model: claude-sonnet-5-5
+claude_max_stocks: 15       # only the top-scored names get a Claude review
