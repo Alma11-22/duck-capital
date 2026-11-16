@@ -9,7 +9,7 @@ import os
 import threading
 import urllib.request
 
-USAGE = {"calls": 0, "input_tokens": 0, "output_tokens": 0}
+USAGE = {"calls": 0, "input_tokens": 0, "output_tokens": 0, "errors": 0, "last_error": ""}
 _U = threading.Lock()
 
 
@@ -63,7 +63,17 @@ def _ask(prompt, cfg, max_tokens=500):
             USAGE["output_tokens"] += resp.get("usage", {}).get("output_tokens", 0)
         return json.loads(text[text.find("{"): text.rfind("}") + 1])
     except Exception as e:  # never let the optional layer break the run
-        print(f"  ! Claude call failed: {e}")
+        msg = str(e)
+        body = getattr(e, "read", None)
+        if body:
+            try:
+                msg += " - " + json.loads(body()).get("error", {}).get("message", "")
+            except Exception:
+                pass
+        with _U:
+            USAGE["errors"] += 1
+            USAGE["last_error"] = msg
+        print(f"  ! Claude call failed: {msg}")
         return None
 
 

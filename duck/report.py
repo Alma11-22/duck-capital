@@ -131,7 +131,7 @@ own; it's your head start.</p></div>"""
 
 
 def write(date, live, drops, before, stats, all_drops=None, warnings=None, outdir="reports",
-          desk_today=(), desk_on=False, exit_alerts=()):
+          desk_today=(), desk_on=False, exit_alerts=(), desk_error=""):
     """drops: rebounds to show (already filtered). all_drops/warnings: full lists for the CSVs."""
     os.makedirs(outdir, exist_ok=True)
     all_drops = drops if all_drops is None else all_drops
@@ -166,6 +166,8 @@ def write(date, live, drops, before, stats, all_drops=None, warnings=None, outdi
         p.append(f"<h2>The desk today</h2><div class=card><table>{rows}</table></div>")
     elif not desk_on:
         p.append("<div class=meta>The desk (analyst agents) is off: add ANTHROPIC_API_KEY to turn it on.</div>")
+    elif desk_error:
+        p.append(f"<div class=meta><b>The desk couldn't run today:</b> {e(desk_error)}</div>")
 
     # --- Exit alerts ---
     if exit_alerts:

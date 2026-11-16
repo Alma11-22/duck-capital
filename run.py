@@ -171,7 +171,8 @@ def main():
     stats = {"all": paper.stats(), "rebound": paper.stats("rebound"), "event_winner": paper.stats("event_winner"),
              "desk": paper.stats("desk"), "rules": paper.stats(("rebound", "event_winner"))}
     path = report.write(asof, live, shown, before, stats, all_drops=drops, warnings=warnings,
-                        desk_today=desk_today, desk_on=desk_on, exit_alerts=exit_alerts)
+                        desk_today=desk_today, desk_on=desk_on, exit_alerts=exit_alerts,
+                        desk_error=claude.USAGE["last_error"] if desk_on and not desk_today else "")
     print(f"    {len(live)} live events, {len(shown)} of {len(drops)} rebounds shown, {len(before)} before-the-move, "
           f"{added} new paper picks")
     if not args.demo:
