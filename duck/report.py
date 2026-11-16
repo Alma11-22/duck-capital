@@ -1,9 +1,12 @@
 """Daily output: a Duck Capital web page you can open on your phone, plus CSVs."""
 import csv
 import html
+from . import table_view as tv
 import os
 
 from .score import BUCKET_LABEL
+
+_REV = set()
 
 CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap');
@@ -35,7 +38,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
 .meter i{display:block;height:100%;background:var(--accent)}
 .small{font-size:12px;color:var(--muted)}
 a{color:var(--accent-ink)}
-"""
+"""+tv.CSS+""""""
 
 
 def _cls(s):
@@ -68,7 +71,8 @@ def _rebound_card(d, e):
     plan = " → ".join(f"${x:,.2f}" for x in d["buy_plan"])
     ev = f" · <b>{e(d['event'])}</b>" if d.get("event") else ""
     thesis = _desk_block(d, e)
-    return (f"<div class=card><div class=top><span class=t>{e(d['ticker'])} · {e(d['name'])}</span>"
+    return (f"<div class=card{tv.attr(d['ticker'], _REV)}><div class=top><span class=t>{e(d['ticker'])} · {e(d['name'])}"
+            f"{tv.tag(d['ticker'], _REV)}</span>"
             f"<span class='pill {_cls(d['score'])}'>{d['score']}</span></div>"
             f"<div class=meta>${d['close']:,.2f} · {d['drop']:+.0%} from recent high · "
             f"{e(BUCKET_LABEL[d['bucket']])} · ${d['market_cap_musd']/1000:,.0f}B{ev}</div>"
@@ -131,12 +135,15 @@ own; it's your head start.</p></div>"""
 
 
 def write(date, live, drops, before, stats, all_drops=None, warnings=None, outdir="reports",
-          desk_today=(), desk_on=False, exit_alerts=(), desk_error=""):
+          desk_today=(), desk_on=False, exit_alerts=(), desk_error="", exit_status=None):
     """drops: rebounds to show (already filtered). all_drops/warnings: full lists for the CSVs."""
     os.makedirs(outdir, exist_ok=True)
     all_drops = drops if all_drops is None else all_drops
     warnings = warnings or []
     e = html.escape
+    modal, reviewed = tv.block(list(all_drops) + [w for ev in live for w in ev.get("winners", [])], exit_status or {})
+    _REV.clear()
+    _REV.update(reviewed)
     SECT = ("sector_panic", "sector_downturn", "crypto_selloff")
     company = [d for d in drops if d["bucket"] not in SECT]
     buy = [d for d in company if d["score"] >= 70]
@@ -190,7 +197,7 @@ def write(date, live, drops, before, stats, all_drops=None, warnings=None, outdi
         if t in seen:
             continue
         seen.add(t)
-        rows.append(f"<tr><td><b>{e(t)}</b></td><td><span class='pill {_cls(s)}'>{s}</span></td>"
+        rows.append(f"<tr{tv.attr(t, _REV)}><td><b>{e(t)}</b>{tv.tag(t, _REV)}</td><td><span class='pill {_cls(s)}'>{s}</span></td>"
                     f"<td>{act}</td><td class=small>{e(why)}</td></tr>")
         if len(rows) == 5:
             break
@@ -223,7 +230,7 @@ def write(date, live, drops, before, stats, all_drops=None, warnings=None, outdi
                 else "<span class='pill gray'>not confirmed by prices yet</span>")
         heads = "".join(f"<li>{e(h)}</li>" for h in ev["headlines"])
         wrows = "".join(
-            f"<tr><td><b>{e(w['ticker'])}</b><div class=small>{e(w['kind'].replace('_', '-'))}</div></td>"
+            f"<tr{tv.attr(w['ticker'], _REV)}><td><b>{e(w['ticker'])}</b>{tv.tag(w['ticker'], _REV)}<div class=small>{e(w['kind'].replace('_', '-'))}</div></td>"
             f"<td><span class='pill {_cls(w['score'])}'>{w['score']}</span></td>"
             f"<td>{_pct(w['move'])}</td><td class=small>{e(w.get('psych_label', ''))}</td>"
             f"<td class=small>{('<b>Desk: ' + e(_call(w)) + '.</b> ' + e(w['desk']['chair'].get('memo', ''))) if w.get('desk') else e('; '.join(w['reasons'][:3]))}</td></tr>"
@@ -252,7 +259,7 @@ def write(date, live, drops, before, stats, all_drops=None, warnings=None, outdi
                 f"{kinds['sector_panic']} look like panic (numbers still healthy), "
                 f"{kinds['sector_downturn']} like a real downturn (numbers weakening)")
         rows = "".join(
-            f"<tr><td><b>{e(d['ticker'])}</b><div class=small>{e(d['name'][:28])}</div></td>"
+            f"<tr{tv.attr(d['ticker'], _REV)}><td><b>{e(d['ticker'])}</b>{tv.tag(d['ticker'], _REV)}<div class=small>{e(d['name'][:28])}</div></td>"
             f"<td><span class='pill {_cls(d['score'])}'>{d['score']}</span></td><td>{d['drop']:+.0%}</td>"
             f"<td class=small>{e(BUCKET_LABEL[d['bucket']])}</td><td class=small>{e(d.get('psych_label', ''))}</td>"
             f"<td class=small>{e(_call(d))}</td></tr>"
@@ -288,7 +295,7 @@ def write(date, live, drops, before, stats, all_drops=None, warnings=None, outdi
                 if "rules" in stats else "")
              + ("<tr><td><b>Rules + desk</b> (chair says Buy)</td><td>{2}</td><td>{0}</td><td>{1}</td></tr>".format(*_stat(stats["desk"]))
                 if "desk" in stats else "")
-             + "</table></div></main>")
+             + "</table></div></main>" + modal)
 
     page = "".join(p)
     open(f"{outdir}/{date}.html", "w").write(page)

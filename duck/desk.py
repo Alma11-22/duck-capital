@@ -199,7 +199,7 @@ def exits(paper_rows, store, live, details, cfg, log=print):
                 ticker=r["ticker"], kind=r["type"], date=r["date"], entry=entry, price=price, ret=ret,
                 reason=r.get("reason", ""), trigger=r.get("exit_trigger", "not recorded"),
                 events=", ".join(e["label"] for e in live) or "none", headlines=heads), cfg, 150)
-            if out and out.get("action") in ("trim", "sell"):
+            if out and out.get("action") in ("hold", "trim", "sell"):
                 return {"ticker": r["ticker"], "type": r["type"], "ret": ret, "action": out["action"],
                         "why": out.get("why", ""), "source": "desk"}
             return None
@@ -209,9 +209,11 @@ def exits(paper_rows, store, live, details, cfg, log=print):
         if ret >= cfg.get("take_profit", 0.30):
             return {"ticker": r["ticker"], "type": r["type"], "ret": ret, "action": "trim",
                     "why": f"Up {ret:.0%} from entry: consider taking some profit", "source": "rule"}
-        return None
+        return {"ticker": r["ticker"], "type": r["type"], "ret": ret, "action": "hold",
+                "why": "No stop-loss or profit level hit", "source": "rule"}
 
     with cf.ThreadPoolExecutor(max_workers=4) as pool:
-        alerts = [a for a in pool.map(one, rows) if a]
+        status = [a for a in pool.map(one, rows) if a]
+    alerts = [a for a in status if a["action"] in ("trim", "sell")]
     log(f"    exit monitor: {len(alerts)} alert(s) on {len(rows)} open picks")
-    return alerts
+    return alerts, {a["ticker"]: a for a in status}
