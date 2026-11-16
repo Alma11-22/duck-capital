@@ -116,7 +116,7 @@ def evidence(d, live):
 def _agent(role, ev, cfg):
     title, job = ROLES[role]
     extra = ', "size_pct": <number 0-5>' if role == "risk" else ""
-    out = claude._ask(AGENT_PROMPT.format(title=title, job=job, evidence=ev, extra=extra), cfg, 450)
+    out = claude._ask(AGENT_PROMPT.format(title=title, job=job, evidence=ev, extra=extra), cfg, 900)
     if not out:
         return None
     out["adjust"] = max(-5, min(5, int(out.get("adjust", 0) or 0)))
@@ -133,7 +133,7 @@ def review(d, live, cfg):
         return None
     txt = "\n".join(f"- {v['title']} ({v['stance']}, {v['adjust']:+d}): {v['headline']} | "
                     + "; ".join(v.get("reasons", [])[:3]) for v in views)
-    chair = claude._ask(CHAIR_PROMPT.format(evidence=ev, views=txt, score=d["score"]), cfg, 400)
+    chair = claude._ask(CHAIR_PROMPT.format(evidence=ev, views=txt, score=d["score"]), cfg, 800)
     if not chair:
         return None
     chair["adjust"] = max(-15, min(15, int(chair.get("adjust", 0) or 0)))
@@ -198,7 +198,7 @@ def exits(paper_rows, store, live, details, cfg, log=print):
             out = claude._ask(EXIT_PROMPT.format(
                 ticker=r["ticker"], kind=r["type"], date=r["date"], entry=entry, price=price, ret=ret,
                 reason=r.get("reason", ""), trigger=r.get("exit_trigger", "not recorded"),
-                events=", ".join(e["label"] for e in live) or "none", headlines=heads), cfg, 150)
+                events=", ".join(e["label"] for e in live) or "none", headlines=heads), cfg, 300)
             if out and out.get("action") in ("hold", "trim", "sell"):
                 return {"ticker": r["ticker"], "type": r["type"], "ret": ret, "action": out["action"],
                         "why": out.get("why", ""), "source": "desk"}
