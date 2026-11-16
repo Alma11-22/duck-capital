@@ -1,5 +1,5 @@
 ticker,direction,move_5d,close,watchlist,what_happened,headlines
-MSFT,bad,-0.013,523.88,True,Serious company news,"Consumer Tech (Nov 9-13): Jensen Resigns From Nvidia Amid Affair Controvery, Microsoft Faces Massive Outage & More | Why the Microsoft Outage Came at the Worst Possible Time for the Stock"
+MSFT,bad,-0.013,523.88,True,Serious company news,"Americans fear the worst after Pentagon doomsday prepping, ‘Black October’ cyberattacks, stock crash, spy scandal, Microsoft outage, and airport chaos | Consumer Tech (Nov 9-13): Jensen Resigns From Nvidia Amid Affair Controvery, Microsoft Faces Massive Outage & More"
 WMT,mixed,0.02,128.09,False,Serious company news | Usually helped by AI trade unwind / chip selloff; only +2% so far,"Store Recalls Report Finds Walmart Named in 81 Official U.S. Recalls in 2026, More Than Any Other Physical Retailer"
 GD,good,0.027,363.46,False,Usually helped by War / geopolitical conflict; only +3% so far,
 XOM,good,0.028,170.59,False,Usually helped by War / geopolitical conflict; only +3% so far,
