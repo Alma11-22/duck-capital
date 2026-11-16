@@ -19,3 +19,7 @@ date,ticker,type,reason,score,entry,last_price,last_date,return,exit_trigger
 2026-11-13,WMT,event_winner,AI trade unwind / chip selloff,70,128.09,128.09,2026-11-13,0.0,"Big tech reaffirms AI spending, or chip stocks put in two weeks of higher lows."
 2026-11-13,CME,event_winner,Crypto crash,70,317.97,317.97,2026-11-13,0.0,Bitcoin reclaims its 50-day average and fund outflows stop.
 2026-11-13,ICE,event_winner,Crypto crash,70,178.51,178.51,2026-11-13,0.0,Bitcoin reclaims its 50-day average and fund outflows stop.
+2026-11-13,NVT,desk,sector_panic,71,114.69,114.69,2026-11-13,0.0,"The sector's own numbers start falling (orders, guidance), turning a panic into a downturn."
+2026-11-13,RTX,desk,War / geopolitical conflict,82,198.58,198.58,2026-11-13,0.0,"Ceasefire talks gain traction, or oil falls back to pre-war levels."
+2026-11-13,LHX,desk,War / geopolitical conflict,83,272.35,272.35,2026-11-13,0.0,"Ceasefire talks gain traction, or oil falls back to pre-war levels."
+2026-11-13,ICE,desk,Crypto crash,73,178.51,178.51,2026-11-13,0.0,Bitcoin reclaims its 50-day average and fund outflows stop.

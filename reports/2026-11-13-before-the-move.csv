@@ -1,11 +1,11 @@
 ticker,direction,move_5d,close,watchlist,what_happened,headlines
-MSFT,bad,-0.013,523.88,True,Serious company news,"Americans fear the worst after Pentagon doomsday prepping, ‘Black October’ cyberattacks, stock crash, spy scandal, Microsoft outage, and airport chaos | Consumer Tech (Nov 9-13): Jensen Resigns From Nvidia Amid Affair Controvery, Microsoft Faces Massive Outage & More"
-WMT,mixed,0.02,128.09,False,Serious company news | Usually helped by AI trade unwind / chip selloff; only +2% so far,"Store Recalls Report Finds Walmart Named in 81 Official U.S. Recalls in 2026, More Than Any Other Physical Retailer"
+MSFT,bad,-0.013,523.88,True,Serious company news,Is Microsoft’s Outlook Outage a “Disaster Moment?” The Stock Barely Moved | What caused the global Microsoft outage? Why Outlook went down – and how the issue had been hiding for months
+WMT,mixed,0.02,128.09,False,SEC red-flag filing | Usually helped by AI trade unwind / chip selloff; only +2% so far | Usually helped by Crypto crash; only +2% so far,2026-11-16: Executive / director departure (8-K 5.02)
 GD,good,0.027,363.46,False,Usually helped by War / geopolitical conflict; only +3% so far,
 XOM,good,0.028,170.59,False,Usually helped by War / geopolitical conflict; only +3% so far,
 MOS,good,-0.02,21.92,False,Usually helped by War / geopolitical conflict; only -2% so far,
 NTR,good,-0.003,71.24,False,Usually helped by War / geopolitical conflict; only -0% so far,
 PANW,good,0.027,322.24,False,Usually helped by War / geopolitical conflict; only +3% so far,
+STNG,good,0.028,83.03,False,Usually helped by War / geopolitical conflict; only +3% so far,
 PG,good,0.027,169.8,False,Usually helped by AI trade unwind / chip selloff; only +3% so far,
 DUK,good,0.011,129.16,False,Usually helped by AI trade unwind / chip selloff; only +1% so far,
-SO,good,0.014,93.59,False,Usually helped by AI trade unwind / chip selloff; only +1% so far,
