@@ -1,0 +1,11 @@
+ticker,direction,move_5d,close,watchlist,what_happened,headlines
+LLY,good,0.014,1431.67,True,Usually helped by AI trade unwind / chip selloff; only +1% so far,
+BAC,bad,-0.009,50.08,False,Serious company news,"Chase Confirms Banking Glitch As Thousands Report Outages. Bank Of America, Wells Fargo Also Flagged. | Bank of America Moves to Settle Fake-Accounts Lawsuit: What's Next?"
+JPM,bad,-0.011,338.21,False,Serious company news,"Why Are US Banks Reporting Outages? JPMorgan Rules Out Cyberattack, Blames Software Bug"
+WMT,mixed,0.022,128.41,False,SEC red-flag filing | Usually helped by AI trade unwind / chip selloff; only +2% so far | Usually helped by Crypto crash; only +2% so far,2026-11-16: Executive / director departure (8-K 5.02)
+PG,good,0.028,173.02,False,Usually helped by AI trade unwind / chip selloff; only +3% so far,
+JNJ,good,0.002,282.55,False,Usually helped by AI trade unwind / chip selloff; only +0% so far,
+DUK,good,0.019,130.59,False,Usually helped by AI trade unwind / chip selloff; only +2% so far,
+SO,good,0.011,94.64,False,Usually helped by AI trade unwind / chip selloff; only +1% so far,
+ICE,good,0.024,178.29,False,Usually helped by Crypto crash; only +2% so far,
+MCD,good,-0.024,274.67,False,Usually helped by AI trade unwind / chip selloff; only -2% so far,
