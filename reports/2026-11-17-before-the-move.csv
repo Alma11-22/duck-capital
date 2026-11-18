@@ -1,0 +1,11 @@
+ticker,direction,move_5d,close,watchlist,what_happened,headlines
+AAPL,bad,0.01,351.91,True,Serious company news,Apple Pay outage blocks instant crypto purchases | Why Apple is down in a week of outages from Microsoft to Chase
+BAC,bad,-0.024,49.44,False,Serious company news,"How Investors Are Reacting To Bank of America (BAC) Online Banking Outages | Chase Confirms Banking Glitch As Thousands Report Outages. Bank Of America, Wells Fargo Also Flagged."
+V,mixed,-0.015,416.77,False,Serious company news | Usually helped by Crypto crash; only -1% so far,Visa Launches Threat Intelligence Platform to Strengthen Cyber and Fraud Defense
+WMT,mixed,0.016,127.52,False,SEC red-flag filing | Usually helped by Crypto crash; only +2% so far | Usually helped by AI trade unwind / chip selloff; only +2% so far,2026-11-16: Executive / director departure (8-K 5.02)
+KO,good,0.019,98.79,False,Usually helped by Crypto crash; only +2% so far | Usually helped by AI trade unwind / chip selloff; only +2% so far,
+CVX,good,0.023,216.13,False,Usually helped by War / geopolitical conflict; only +2% so far,
+OXY,good,-0.007,56.52,False,Usually helped by War / geopolitical conflict; only -1% so far,
+NOC,good,0.008,553.26,False,Usually helped by War / geopolitical conflict; only +1% so far,
+RTX,good,-0.011,198.0,False,Usually helped by War / geopolitical conflict; only -1% so far,
+XOM,good,0.017,167.21,False,Usually helped by War / geopolitical conflict; only +2% so far,
