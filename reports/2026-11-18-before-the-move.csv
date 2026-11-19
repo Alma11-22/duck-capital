@@ -1,0 +1,11 @@
+ticker,direction,move_5d,close,watchlist,what_happened,headlines
+AAPL,bad,-0.009,352.45,True,Serious company news,Apple Outage Adds to a Week of US Tech Failures | Apple Reveals Cause of Major Outage That Disrupted iCloud and Apple Pay
+MSFT,good,-0.025,508.29,True,Usually helped by AI breakthrough; only -2% so far,
+COST,mixed,0.008,1096.62,False,Serious company news | Usually helped by AI trade unwind / chip selloff; only +1% so far,Costco recalls food product that’s popular during the holidays | Costco generators sell out as tech outages spark panic buying
+V,mixed,-0.024,415.22,False,Serious company news | Usually helped by Crypto crash; only -2% so far,Visa Launches Threat Intelligence Platform to Strengthen Cyber and Fraud Defense
+WMT,mixed,0.013,127.36,False,SEC red-flag filing | Usually helped by AI trade unwind / chip selloff; only +1% so far,2026-11-16: Executive / director departure (8-K 5.02)
+KO,good,0.005,98.09,False,Usually helped by AI trade unwind / chip selloff; only +1% so far,
+JNJ,good,-0.027,272.7,False,Usually helped by AI trade unwind / chip selloff; only -3% so far,
+BRK.B,good,-0.023,574.62,False,Usually helped by AI trade unwind / chip selloff; only -2% so far,
+DUK,good,0.01,130.05,False,Usually helped by AI trade unwind / chip selloff; only +1% so far,
+SO,good,0.006,94.41,False,Usually helped by AI trade unwind / chip selloff; only +1% so far,
