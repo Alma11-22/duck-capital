@@ -1,0 +1,11 @@
+ticker,direction,move_5d,close,watchlist,what_happened,headlines
+WMT,mixed,-0.001,127.95,False,SEC red-flag filing | Usually helped by AI trade unwind / chip selloff; only -0% so far | Usually helped by Crypto crash; only -0% so far,2026-11-16: Executive / director departure (8-K 5.02)
+COST,mixed,-0.004,1102.15,False,Serious company news | Usually helped by AI trade unwind / chip selloff; only -0% so far,From tech glitches to bulk buying: How outages are spurring a wave of Costco sales | Costco Stands to Benefit as Shoppers Rush to Stock Up Amid Multiple Tech Outages
+HD,bad,-0.028,339.04,False,SEC red-flag filing,2026-11-17: Executive / director departure (8-K 5.02)
+KO,good,-0.023,96.99,False,Usually helped by AI trade unwind / chip selloff; only -2% so far,
+DUK,good,0.005,129.78,False,Usually helped by AI trade unwind / chip selloff; only +0% so far,
+SO,good,-0.005,93.13,False,Usually helped by AI trade unwind / chip selloff; only -0% so far,
+PG,good,-0.003,169.37,False,Usually helped by AI trade unwind / chip selloff; only -0% so far,
+MCD,good,0.005,273.24,False,Usually helped by AI trade unwind / chip selloff; only +0% so far,
+VZ,good,0.003,46.48,False,Usually helped by AI trade unwind / chip selloff; only +0% so far,
+WM,good,-0.017,239.63,False,Usually helped by AI trade unwind / chip selloff; only -2% so far,
