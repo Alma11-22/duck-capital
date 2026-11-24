@@ -1,0 +1,11 @@
+ticker,direction,move_5d,close,watchlist,what_happened,headlines
+HD,bad,-0.004,346.06,False,SEC red-flag filing,2026-11-17: Executive / director departure (8-K 5.02)
+TSM,mixed,-0.026,363.6,False,Usually helped by AI breakthrough; only -3% so far | Usually hurt by AI trade unwind / chip selloff; only -3% so far,
+MU,mixed,-0.016,707.7,False,Usually helped by AI breakthrough; only -2% so far | Usually hurt by AI trade unwind / chip selloff; only -2% so far,
+VRT,mixed,-0.012,186.35,False,Usually helped by AI breakthrough; only -1% so far | Usually hurt by AI trade unwind / chip selloff; only -1% so far,
+ETN,good,-0.002,336.34,False,Usually helped by AI breakthrough; only -0% so far,
+AMAT,good,-0.01,346.87,False,Usually helped by AI breakthrough; only -1% so far,
+DUK,good,-0.009,129.47,False,Usually helped by AI trade unwind / chip selloff; only -1% so far,
+SO,good,-0.016,93.11,False,Usually helped by AI trade unwind / chip selloff; only -2% so far,
+WMT,good,0.009,129.58,False,Usually helped by AI trade unwind / chip selloff; only +1% so far,
+SCHW,good,-0.006,92.37,False,Usually helped by Crypto crash; only -1% so far,
