@@ -1,0 +1,11 @@
+ticker,direction,move_5d,close,watchlist,what_happened,headlines
+NVDA,mixed,-0.001,155.38,True,Usually hurt by AI trade unwind / chip selloff; only -0% so far | Usually helped by Crypto crash; only -0% so far | Usually helped by AI breakthrough; only -0% so far,
+MSFT,good,-0.02,496.13,True,Usually helped by AI breakthrough; only -2% so far,
+KO,mixed,-0.012,97.62,False,SEC red-flag filing | Usually helped by AI trade unwind / chip selloff; only -1% so far,2026-11-23: Executive / director departure (8-K 5.02)
+V,mixed,0.0,416.78,False,SEC red-flag filing | Usually helped by Crypto crash; only +0% so far,2026-11-23: Executive / director departure (8-K 5.02)
+JNJ,good,-0.008,276.46,False,Usually helped by AI trade unwind / chip selloff; only -1% so far,
+BRK.B,good,-0.016,577.21,False,Usually helped by AI trade unwind / chip selloff; only -2% so far,
+DUK,good,0.009,130.96,False,Usually helped by AI trade unwind / chip selloff; only +1% so far,
+SO,good,0.005,94.11,False,Usually helped by AI trade unwind / chip selloff; only +1% so far,
+TSM,mixed,-0.029,349.2,False,Usually hurt by AI trade unwind / chip selloff; only -3% so far | Usually helped by AI breakthrough; only -3% so far,
+ICE,good,0.016,174.89,False,Usually helped by Crypto crash; only +2% so far,
