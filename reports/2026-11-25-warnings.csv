@@ -1,15 +1,13 @@
 ticker,neg_score,drop,close,watchlist,headlines,sec_red_flags
-BAC,29,-0.06,48.54,False,Bank of America Short Interest Falls From October Peak | U.S. midcap banks: BofA weighs in on three stocks | Salesforce earnings to put Bank of America’s growth outlook to the test,
-TSLA,9,-0.067,380.14,True,"SpaceX Slides 5% as Gary Black Warns a Tesla Bid Could Push It Below $100; Rocket Lab and AST SpaceMobile Drop 4% | Tesla Slides 6% as EU Delays Vote on Its Self-Driving Software; Rivian and Lucid Drop 4% | Tesla Sinks 5%, Sandisk Down 13% as AI Selloff Deepens and EU Stalls FSD Approval",
-MA,9,-0.019,659.97,False,Is Mastercard Stock Really Expensive? | Mastercard Is Up 20% in a Year. Wedbush Sees Another 16% | Mastercard (MA) Deepens Payment Partnership With A Global Marketplace,
+BAC,29,-0.06,48.54,False,Bank of America Short Interest Falls From October Peak | Will Bank of America's Swiss Expansion Fuel Further Fee Income Growth? | U.S. midcap banks: BofA weighs in on three stocks,
 KO,8,-0.019,97.59,False,Coca-Cola (KO) Appoints David Elkins As CFO Effective April 2027 | Coca-Cola Consolidated (COKE) Stock Is Up 5.9% Today Without Company News,2026-11-23: Executive / director departure (8-K 5.02)
-META,7,-0.05,609.89,True,"Meta Platforms Stocks Fall 2.91% as Big Tech Selloff Spreads | CoreWeave’s Banks to Sell $4.5 Billion Meta-Tied Loan Next Week | CoreWeave banks prepare $4.5 billion Meta-tied loan sale next week, Bloomberg says",
-V,7,-0.028,424.39,False,Visa: The Market Finally Recognizes Its Strength (Rating Downgrade) | Visa: Paying A Pretty Penny For Stability (Rating Downgrade),2026-11-23: Executive / director departure (8-K 5.02)
-ABBV,6,-0.019,294.48,False,"Biotech Loses Ground In November’s Market Slide — These 5 Stocks Bucked The Selloff As Lilly, AbbVie And Amgen Fell | 3 ETFs For Owning AbbVie As Its Research Push Widens The Choice | Why Is AbbVie (ABBV) Stock Up Today? Health Care Rally as Tech Slides",
-APP,5,-0.087,378.95,False,APP Falls 14.9% in One Week as Growth Strength Meets Execution Risk | AppLovin Jumped 32% in a Brutal Month—Then Dropped 15% This Week,
-GE,5,-0.075,316.98,False,Why Do Analysts Keep Chopping GE Vernova Stock? | Why Jim Cramer Favored GE Aerospace Stock Despite a Cash Flow Drop,
-SPY,4,-0.072,716.7,False,Does RSP Hold Up Better Than SPY In Sell-Offs?,
-JNJ,4,-0.041,273.94,False,Should You Swap Tech For Johnson & Johnson Stock?,
-AAPL,3,-0.002,355.58,True,Apple Stock Defies AI Selloff: Is It the Market's Safe Haven?,
-COST,3,-0.024,1086.81,False,"‘They were all gone’: Costco generator sellouts fuel prepper fears. Is America headed for a crash? | Michael Burry Says Apple, Costco and Walmart Could Face a Delayed Selloff",
+GE,7,-0.075,316.98,False,Why Do Analysts Keep Chopping GE Vernova Stock? | GE Aerospace Lands First GEnx Engine Deal with Malaysia Aviation Group as Regional Demand Grows | Why Jim Cramer Favored GE Aerospace Stock Despite a Cash Flow Drop,
+V,5,-0.028,424.39,False,Visa: The Market Finally Recognizes Its Strength (Rating Downgrade),2026-11-23: Executive / director departure (8-K 5.02)
+WMT,5,-0.003,131.94,False,Walmart Soars 10% in a Month as Tech Sinks. Michael Burry Calls It One of the Market’s “Generals” | Walmart Quivers As Trump Doubles Down On Tariffs; Its Dow Peers Shrug | Tariffs Strike Again: Trump Announces Tariffs Up to 20% on China and the EU. Walmart Already Navigated “Over $2 Billion”,
+META,4,-0.05,609.89,True,Meta Faces India Lawsuit Over 5.4 Million Content Restrictions | CoreWeave Can Now Borrow at 7% With Meta’s Name on the Loan,
+RSP,4,-0.034,215.74,False,Does RSP Hold Up Better Than SPY In Sell-Offs?,
+TSLA,3,-0.067,380.14,True,"Situational Awareness Lost 65% in Q3, Investor Leopold Aschenbrenner Warns Nvidia, Microsoft, Tesla Could Lose Their Edge: Report",
+NVO,3,-0.029,40.97,True,"Novo Nordisk (CPSE:NOVO B), What Is Driving Attention Now? | Lilly, Novo Supplier Bachem Hit by Share Drop After Growth Plans Disappoint",
 QCOM,3,-0.09,168.66,False,,2026-11-24: Executive / director departure (8-K 5.02)
+JNJ,3,-0.041,273.94,False,Johnson & Johnson Short Interest Rises As Shorts Stay Below Peak,
+MA,3,-0.019,659.97,False,Mastercard Is Up 20% in a Year. Wedbush Sees Another 16%,

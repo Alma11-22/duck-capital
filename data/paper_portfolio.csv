@@ -94,3 +94,4 @@ date,ticker,type,reason,score,entry,last_price,last_date,return,exit_trigger
 2026-11-25,AEM,desk,Crypto crash,75,161.2,161.2,2026-11-25,0.0,Bitcoin reclaims its 50-day average and fund outflows stop.
 2026-11-25,DG,desk,Tariffs / trade war,70,139.27,139.27,2026-11-25,0.0,"A deal or pause is announced, or tariffs are rolled back."
 2026-11-25,NUE,desk,Tariffs / trade war,73,248.34,248.34,2026-11-25,0.0,"A deal or pause is announced, or tariffs are rolled back."
+2026-11-25,TJX,event_winner,Tariffs / trade war,70,146.09,146.09,2026-11-25,0.0,"A deal or pause is announced, or tariffs are rolled back."

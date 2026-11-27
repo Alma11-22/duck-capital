@@ -1,11 +1,11 @@
 ticker,direction,move_5d,close,watchlist,what_happened,headlines
-TSLA,bad,-0.009,380.14,True,Serious company news,SpaceX Slides 5% as Gary Black Warns a Tesla Bid Could Push It Below $100; Rocket Lab and AST SpaceMobile Drop 4%
 AAPL,bad,0.009,355.58,True,Usually hurt by Tariffs / trade war; only +1% so far,
+META,bad,-0.011,609.89,True,Serious company news,Meta Faces India Lawsuit Over 5.4 Million Content Restrictions
 UNH,good,-0.011,346.19,True,Usually helped by AI trade unwind / chip selloff; only -1% so far,
 NVDA,bad,-0.011,149.3,True,Usually hurt by AI trade unwind / chip selloff; only -1% so far,
 KO,mixed,-0.005,97.59,False,SEC red-flag filing | Usually helped by AI trade unwind / chip selloff; only -1% so far,2026-11-23: Executive / director departure (8-K 5.02)
-V,mixed,0.022,424.39,False,SEC red-flag filing | Usually helped by Crypto crash; only +2% so far,2026-11-23: Executive / director departure (8-K 5.02)
-NEM,good,-0.03,101.44,False,Usually helped by War / geopolitical conflict; only -3% so far | Usually helped by AI trade unwind / chip selloff; only -3% so far | Usually helped by Crypto crash; only -3% so far,
 COST,good,-0.009,1086.81,False,Usually helped by AI trade unwind / chip selloff; only -1% so far | Usually helped by Tariffs / trade war; only -1% so far,
-AEM,good,-0.004,161.2,False,Usually helped by War / geopolitical conflict; only -0% so far | Usually helped by Crypto crash; only -0% so far,
+STLD,good,-0.026,216.86,False,Usually helped by Tariffs / trade war; only -3% so far,
+V,mixed,0.022,424.39,False,SEC red-flag filing | Usually helped by Crypto crash; only +2% so far,2026-11-23: Executive / director departure (8-K 5.02)
 NUE,good,-0.008,248.34,False,Usually helped by Tariffs / trade war; only -1% so far,
+ROST,good,-0.019,223.26,False,Usually helped by Tariffs / trade war; only -2% so far,
