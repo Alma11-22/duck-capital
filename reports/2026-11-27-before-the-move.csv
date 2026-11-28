@@ -1,0 +1,11 @@
+ticker,direction,move_5d,close,watchlist,what_happened,headlines
+AMZN,bad,-0.013,254.12,True,Usually hurt by Tariffs / trade war; only -1% so far,
+AAPL,bad,0.027,358.54,True,Usually hurt by Tariffs / trade war; only +3% so far,
+PANW,bad,0.014,366.76,False,Serious company news,Palo Alto Networks hit with fraud claims after blowout quarter | Palo Alto Networks (PANW) Hit With Fraud Lawsuit After $4.5 Billion AI Deal
+KO,mixed,0.014,97.4,False,SEC red-flag filing | Usually helped by AI trade unwind / chip selloff; only +1% so far,2026-11-23: Executive / director departure (8-K 5.02)
+COST,good,0.004,1097.81,False,Usually helped by AI trade unwind / chip selloff; only +0% so far | Usually helped by Tariffs / trade war; only +0% so far,
+STLD,good,0.017,222.01,False,Usually helped by Tariffs / trade war; only +2% so far,
+CLF,good,0.001,11.73,False,Usually helped by Tariffs / trade war; only +0% so far,
+ROST,good,0.02,224.21,False,Usually helped by Tariffs / trade war; only +2% so far,
+ROK,good,0.029,394.25,False,Usually helped by Tariffs / trade war; only +3% so far,
+GLD,good,-0.002,334.4,False,Usually helped by AI trade unwind / chip selloff; only -0% so far | Usually helped by Crypto crash; only -0% so far,
